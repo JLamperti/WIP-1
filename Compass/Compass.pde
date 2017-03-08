@@ -73,16 +73,12 @@ void mousePressed() {
   oscP5.send(myMessage, myRemoteLocation); 
   println("android sketch, sending to "+myRemoteLocation);
   if(mouseY < height/2){
-    if(calibrated == false){
+    if(!calibrated){
       this.calibrated = true;
       this.directionOffset = direction - PI/2;
     }
-    if(started){
-    this.started=false;
-    }
-    else{
-      this.started = true;
-    }
+    this.started= !this.started;
+    startStopWalking();
   }
   else{
     resetPosition();
@@ -133,6 +129,12 @@ void sendAcc(){
  
  void resetPosition(){
  OscMessage myMessage = new OscMessage("/reset");
+  oscP5.send(myMessage, myRemoteLocation); 
+  println("android reset, sending to "+myRemoteLocation);
+ }
+ 
+ void startStopWalking(){
+ OscMessage myMessage = new OscMessage("/walk");
   oscP5.send(myMessage, myRemoteLocation); 
   println("android reset, sending to "+myRemoteLocation);
  }

@@ -5,6 +5,7 @@
       
     OscP5 oscP5;
     NetAddress myRemoteLocation;
+    boolean walking = false;
     float   accelerometerZ,
             direction,
             rad,
@@ -44,10 +45,10 @@ boolean btn1Over = false,
      
       
       /* start oscP5, listening for incoming messages on port 12000 */
-    //  oscP5 = new OscP5(this,12000);
+    oscP5 = new OscP5(this,12000);
       
       /* send to phone address, not needed yet */
-     // myRemoteLocation = new NetAddress("127.0.0.1",12001); 
+    myRemoteLocation = new NetAddress("127.0.0.1",12001); 
     }
 
     void draw() {
@@ -70,7 +71,7 @@ boolean btn1Over = false,
       
       if(imageIsLoaded) {
       /*map position on screen*/
-      image(img, stepsX, stepsY, width1*scale, height1*scale);
+      image(img, stepsX, stepsY, width*scale, height*scale);
       //  image(img, 0, 0, width, height);
       
       stepper(); 
@@ -136,7 +137,7 @@ boolean btn1Over = false,
         
       /* if accelerometer detects a step, calculate new x- and y-position for the map */
       
-     if (accelerometerZ >= 11.81 || accelerometerZ <= 7.81){
+     if ((accelerometerZ >= 11.81 || accelerometerZ <= 7.81) && walking){
        stepsX = stepsX+(cos(rad)*10);
        stepsY = stepsY+(sin(rad)*10);
        }
@@ -186,6 +187,10 @@ boolean btn1Over = false,
       if (theOscMessage.checkAddrPattern("/reset")==true) {
         this.stepsX = -3200; /*-(width*(scale/2));*/
         this.stepsY = -1600; /*-(height*(scale/2));*/
+        return;
+      }
+      if (theOscMessage.checkAddrPattern("/walk")==true) {
+        this.walking = !this.walking;
         return;
       }
     }
