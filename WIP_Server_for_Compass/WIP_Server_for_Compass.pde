@@ -20,8 +20,8 @@
     
 int     btn1X = 330, 
         btn1Y = 0,
-        btn2X = 430,
-        btn3X = 530;
+        btn2X = 435,
+        btn3X = 540;
 int     btn1Width = 100, 
         btn1Height = 30;
 color   btn1Color = color (255),
@@ -61,9 +61,9 @@ boolean btn1Over = false,
   rect(btn3X, btn1Y, btn1Width, btn1Height);
   textSize(12);
    fill(0);
-  text("Europa-Karte", btn1X, btn1Y);
-  text("World-Map", btn2X, btn1Y);
-  text("Fall-Weiß", btn3X, btn1Y);
+  text("Europa-Karte", btn1X+5, btn1Y+7);
+  text("Welt-Karte", btn2X+5, btn1Y+7);
+  text("Fall-Weiß", btn3X+5, btn1Y+7);
   fill(0);
       
    //   background(78, 93, 75);
