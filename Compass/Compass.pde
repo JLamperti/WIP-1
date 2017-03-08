@@ -6,12 +6,14 @@ OscP5 oscP5;
 NetAddress myRemoteLocation;
 KetaiSensor sensor;
 CompassManager compass;
-String remoteIP = "141.83.181.126";
+String remoteIP = "141.83.181.90";
 PVector accelerometer;
 float direction;
+float directionOffset = 0;
 float accelerometerX, accelerometerY, accelerometerZ;
 boolean started = false;
 boolean reset = false;
+boolean calibrated = false;
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
@@ -71,8 +73,12 @@ void mousePressed() {
   oscP5.send(myMessage, myRemoteLocation); 
   println("android sketch, sending to "+myRemoteLocation);
   if(mouseY < height/2){
+    if(calibrated == false){
+      this.calibrated = true;
+      this.directionOffset = direction - PI/2;
+    }
     if(started){
-    this.started=false; 
+    this.started=false;
     }
     else{
       this.started = true;
@@ -94,7 +100,10 @@ void mousePressed() {
     }
 
 void directionEvent(float newDirection) {
-  direction = newDirection;
+  direction = newDirection - directionOffset;
+  if(direction < 0){
+     direction = direction + 2*PI; 
+  }
 }
 
 void onAccelerometerEvent(float x, float y, float z) {
@@ -136,10 +145,15 @@ void sendAcc(){
     textSize(100);
     text("STOP", width/2, height/4);
   }
-  else{
+  else if(calibrated){
     fill(0,255,0);
     textSize(100);
      text("START", width/2, height/4  );
+  }
+  else{
+    fill(0,255,0);
+    textSize(100);
+     text("START AND CALIBRATE", width/2, height/4  );
   }
     fill(255);
     textSize(100);
