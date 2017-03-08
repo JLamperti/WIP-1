@@ -13,31 +13,68 @@
             stepsY = 0;
     int     distVert,
             distDiag,
-            scale = 6;
+            scale = 6,
+            width1=600,
+            height1=800;
     PImage  img;
+    
+int     btn1X = 330, 
+        btn1Y = 0,
+        btn2X = 430,
+        btn3X = 530;
+int     btn1Width = 100, 
+        btn1Height = 30;
+color   btn1Color = color (255),
+        btn1Highlight = color (200),
+        bckColor = color(0);
+boolean btn1Over = false,
+        btn2Over = false,
+        btn3Over = false,
+        imageIsLoaded = false;
     
     void setup() {
       accelerometerZ = 9;
+      
+     
       size(displayWidth, displayHeight, P3D);
       frameRate(60);
       textAlign(LEFT, TOP);
       textSize(18);
       fill(50);
-      img=loadImage("europeMap.gif");
+     
       
       /* start oscP5, listening for incoming messages on port 12000 */
-      oscP5 = new OscP5(this,12000);
+    //  oscP5 = new OscP5(this,12000);
       
       /* send to phone address, not needed yet */
-      myRemoteLocation = new NetAddress("127.0.0.1",12001); 
+     // myRemoteLocation = new NetAddress("127.0.0.1",12001); 
     }
 
     void draw() {
-      stepper(); 
-      background(78, 93, 75);
-    
+      
+       update (mouseX, mouseY);
+  background(bckColor);
+   fill(255);
+  rect(btn1X, btn1Y, btn1Width, btn1Height);
+  fill(255);
+  rect(btn2X, btn1Y, btn1Width, btn1Height);
+  rect(btn3X, btn1Y, btn1Width, btn1Height);
+  textSize(12);
+   fill(0);
+  text("Europa-Karte", btn1X, btn1Y);
+  text("World-Map", btn2X, btn1Y);
+  text("Fall-Weiß", btn3X, btn1Y);
+  fill(0);
+      
+   //   background(78, 93, 75);
+      
+      if(imageIsLoaded) {
       /*map position on screen*/
-      image(img, stepsX, stepsY, width*scale, height*scale);
+      image(img, stepsX, stepsY, width1*scale, height1*scale);
+      //  image(img, 0, 0, width, height);
+      
+      stepper(); 
+
       
       /*displays sensor data on screen*/
       text("Accelerometer: " + 
@@ -47,7 +84,7 @@
             "StepsX: " + nfp(stepsX, 1, 2) + "\n" +
             "StepsY: " + nfp(stepsY, 1, 2), 0, 0, width, height);       
     }
-    
+    }
     /************************************************
     *   /TODO:                                      *
     *  here is the function to manipulate the map   *
@@ -107,11 +144,27 @@
     }         
    
     void mousePressed() {
+      
+       if (btn1Over) {
+    img=loadImage("europeMap.gif");
+    imageIsLoaded = true;
+  }
+  
+      if (btn2Over) {
+    img=loadImage("worldMap.png");
+    imageIsLoaded = true;
+  }
+  
+      if (btn3Over) {
+    img=loadImage("Poland1939_GermanPlanMap.jpg");
+    imageIsLoaded = true;
+  }
+      
       /* send a message to client on mouse (touch) click */
-      OscMessage myMessage = new OscMessage("/test");
-      myMessage.add(123);
-      oscP5.send(myMessage, myRemoteLocation); 
-      println("standard sketch, sending to "+myRemoteLocation);
+     // OscMessage myMessage = new OscMessage("/test");
+    //  myMessage.add(123);
+    //  oscP5.send(myMessage, myRemoteLocation); 
+     // println("standard sketch, sending to "+myRemoteLocation);
     }
 
     /* incoming osc message are forwarded to the oscEvent method. */
@@ -136,3 +189,35 @@
         return;
       }
     }
+    
+    void update (int x, int y) {
+  if(overBtn1(btn1X, btn1Y, btn1Width, btn1Height)) {
+  btn1Over = true;
+  } else {
+    btn1Over = false;
+  }
+  
+    if(overBtn1(btn2X, btn1Y, btn1Width, btn1Height)) {
+  btn2Over = true;
+  } else {
+    btn2Over = false;
+  }
+  
+      if(overBtn1(btn3X, btn1Y, btn1Width, btn1Height)) {
+  btn3Over = true;
+  } else {
+    btn3Over = false;
+  }
+  
+}
+
+    
+    
+    boolean overBtn1(int x, int y, int width, int height){
+  if (mouseX >= x && mouseX <= x+width && 
+      mouseY >= y && mouseY <= y+height) {
+    return true;
+  } else {
+    return false;
+  }
+}
