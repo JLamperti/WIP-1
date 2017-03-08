@@ -100,7 +100,7 @@ boolean btn1Over = false,
       
       distVert = 10;
       distDiag = 10;
-    
+    /*
     if ((accelerometerZ >= 11.81 || accelerometerZ <= 7.81) && (degree >= 337.7 || degree <22.5)){
        stepsY = stepsY+distVert;
        }
@@ -128,19 +128,19 @@ boolean btn1Over = false,
        else if ((accelerometerZ >= 11.81 || accelerometerZ <= 7.81) && (degree >= 292.5 && degree <337.5)){
        stepsX = stepsX - distDiag;
        stepsY = stepsY + distDiag;
-       }
+       }*/
        if(stepsX>0) stepsX=0;
         if(stepsY>0) stepsY=0;
         if(stepsX< -width*(scale-1)) stepsX=-width*(scale-1);
         if(stepsY < -height*(scale-1)) stepsY=-height*(scale-1);
+        
       /* if accelerometer detects a step, calculate new x- and y-position for the map */
-      /*
+      
      if (accelerometerZ >= 11.81 || accelerometerZ <= 7.81){
-       stepsX = stepsX+(cos(degree)*5);
-       stepsY = stepsY+(sin(degree)*5);
+       stepsX = stepsX+(cos(rad)*10);
+       stepsY = stepsY+(sin(rad)*10);
        }
-       else {
-       }     */
+         
     }         
    
     void mousePressed() {
