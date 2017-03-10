@@ -6,14 +6,16 @@ OscP5 oscP5;
 NetAddress myRemoteLocation;
 KetaiSensor sensor;
 CompassManager compass;
-String remoteIP = "141.83.181.90";
+String remoteIP = "141.83.181.102";
 PVector accelerometer;
+int task = 0;
 float direction;
 float directionOffset = 0;
 float accelerometerX, accelerometerY, accelerometerZ;
 boolean started = false;
 boolean reset = false;
 boolean calibrated = false;
+PImage[] img = new PImage[3];
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
@@ -30,6 +32,10 @@ void setup() {
   sensor.list();
   accelerometer = new PVector();
   compass = new CompassManager(this);
+  
+  img[0] = loadImage("brandenburg.PNG");
+  img[1] = loadImage("pisa.PNG");
+  img[2] = loadImage("smile.png");
 }
 
 void pause() {
@@ -48,14 +54,15 @@ void draw() {
   
   drawButtons();
   drawText();
- 
+  image(img[task],displayWidth/2-img[task].width/2,displayHeight/2-img[task].height/2);
             
   /* sending the sensor datas */
   sendAcc();
   sendDir();
+  checkPos();
   
   fill(255,0,0);
-  translate(width/2, height/2);
+  translate(width/2, height-height/8);
   scale(2);
   rotate(direction);
   beginShape();
@@ -92,7 +99,11 @@ void mousePressed() {
       /* print the address pattern and the typetag of the received OscMessage */
       print("### received an osc message.");
       print(" addrpattern: "+theOscMessage.addrPattern());
-      println(" typetag: "+theOscMessage.typetag());       
+      println(" typetag: "+theOscMessage.typetag());  
+      
+      if (theOscMessage.checkAddrPattern("/nextTask")==true) {
+        this.task++;
+      }
     }
 
 void directionEvent(float newDirection) {
@@ -128,6 +139,7 @@ void sendAcc(){
  }
  
  void resetPosition(){
+   this.task = 0;
  OscMessage myMessage = new OscMessage("/reset");
   oscP5.send(myMessage, myRemoteLocation); 
   println("android reset, sending to "+myRemoteLocation);
@@ -137,6 +149,10 @@ void sendAcc(){
  OscMessage myMessage = new OscMessage("/walk");
   oscP5.send(myMessage, myRemoteLocation); 
   println("android reset, sending to "+myRemoteLocation);
+ }
+ 
+ void checkPos(){
+  //TODO: listen to Server 
  }
  
  void drawText(){

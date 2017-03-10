@@ -5,6 +5,7 @@
       
     OscP5 oscP5;
     NetAddress myRemoteLocation;
+    String remoteIP = "141.83.181.60";
     boolean walking = false;
     float   accelerometerZ,
             direction,
@@ -16,7 +17,11 @@
             distDiag,
             scale = 6,
             width1=600,
-            height1=800;
+            height1=800,
+            task = 0;
+    int[][] taskPos = {{-3250, -4000, -1200, -1800},
+                        {-2900, -3600, -2500, -3000},
+                        {100, 100, 100, 100}};
     PImage  img;
     
 int     btn1X = 330, 
@@ -48,7 +53,7 @@ boolean btn1Over = false,
     oscP5 = new OscP5(this,12000);
       
       /* send to phone address, not needed yet */
-    myRemoteLocation = new NetAddress("127.0.0.1",12001); 
+    myRemoteLocation = new NetAddress(remoteIP,12001); 
     }
 
     void draw() {
@@ -74,7 +79,8 @@ boolean btn1Over = false,
       image(img, stepsX, stepsY, width*scale, height*scale);
       //  image(img, 0, 0, width, height);
       
-      stepper(); 
+      stepper();
+      checkPos();
 
       
       /*displays sensor data on screen*/
@@ -91,6 +97,16 @@ boolean btn1Over = false,
     *  here is the function to manipulate the map   *
     *                                               *
     ************************************************/
+    
+    void checkPos(){
+      if(walking && stepsX <= taskPos[task][0] && stepsX > taskPos[task][1] 
+          && stepsY <= taskPos[task][2] && stepsY > taskPos[task][3]){
+            OscMessage myMessage = new OscMessage("/nextTask");
+            myMessage.add("sendingPosition");
+            oscP5.send(myMessage, myRemoteLocation);
+            this.task++;
+          }
+    }
     
     void stepper(){ 
       
@@ -187,6 +203,7 @@ boolean btn1Over = false,
       if (theOscMessage.checkAddrPattern("/reset")==true) {
         this.stepsX = -3200; /*-(width*(scale/2));*/
         this.stepsY = -1600; /*-(height*(scale/2));*/
+        this.task = 0;
         return;
       }
       if (theOscMessage.checkAddrPattern("/walk")==true) {
