@@ -40,7 +40,7 @@ boolean btn1Over = false,
     
     void setup() {
       accelerometerZ = 9;
-      
+       rose =loadImage("Kompassrose-no.png");
       size(displayWidth, displayHeight, P3D);
       frameRate(60);
       textAlign(LEFT, TOP);
@@ -75,8 +75,8 @@ boolean btn1Over = false,
       if(imageIsLoaded) {
       /*map position on screen*/
       image(img, stepsX, stepsY, width*scale, height*scale);
-     image(rose, width-100,0,100,100);
-      
+     //image(rose, width-100,0,100,100);
+      image(rose, 0,0,100,100);
       stepper();
       checkPos();
       displayText();
