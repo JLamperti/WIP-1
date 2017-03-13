@@ -22,7 +22,7 @@ int     distVert,
 int[][] taskPos = {{-3250, -4000, -1200, -1800},
                     {-2900, -3600, -2500, -3000},
                     {100, 100, 100, 100}};
-PImage  img;
+PImage  img, rose;
     
 int     btn1X = 330, 
         btn1Y = 0,
@@ -75,7 +75,7 @@ boolean btn1Over = false,
       if(imageIsLoaded) {
       /*map position on screen*/
       image(img, stepsX, stepsY, width*scale, height*scale);
-      //  image(img, 0, 0, width, height);
+     image(rose, width-100,0,100,100);
       
       stepper();
       checkPos();
