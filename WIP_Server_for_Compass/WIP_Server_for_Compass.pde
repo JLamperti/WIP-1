@@ -3,26 +3,26 @@
     import oscP5.*;
     import netP5.*;
       
-    OscP5 oscP5;
-    NetAddress myRemoteLocation;
-    String remoteIP = "141.83.181.60";
-    boolean walking = false;
-    float   accelerometerZ,
-            direction,
-            rad,
-            degree,
-            stepsX = 0, 
-            stepsY = 0;
-    int     distVert,
-            distDiag,
-            scale = 6,
-            width1=600,
-            height1=800,
-            task = 0;
-    int[][] taskPos = {{-3250, -4000, -1200, -1800},
-                        {-2900, -3600, -2500, -3000},
-                        {100, 100, 100, 100}};
-    PImage  img;
+OscP5 oscP5;
+NetAddress myRemoteLocation;
+String remoteIP = "141.83.181.60";
+boolean walking = false;
+float   accelerometerZ,
+        direction,
+        rad,
+        degree,
+        stepsX = 0, 
+        stepsY = 0;
+int     distVert,
+        distDiag,
+        scale = 6,
+        width1=600,
+        height1=800,
+        task = 0;
+int[][] taskPos = {{-3250, -4000, -1200, -1800},
+                    {-2900, -3600, -2500, -3000},
+                    {100, 100, 100, 100}};
+PImage  img;
     
 int     btn1X = 330, 
         btn1Y = 0,
@@ -41,36 +41,34 @@ boolean btn1Over = false,
     void setup() {
       accelerometerZ = 9;
       
-     
       size(displayWidth, displayHeight, P3D);
       frameRate(60);
       textAlign(LEFT, TOP);
       textSize(18);
       fill(50);
-     
-      
+          
       /* start oscP5, listening for incoming messages on port 12000 */
-    oscP5 = new OscP5(this,12000);
+      oscP5 = new OscP5(this,12000);
       
       /* send to phone address, not needed yet */
-    myRemoteLocation = new NetAddress(remoteIP,12001); 
+      myRemoteLocation = new NetAddress(remoteIP,12001); 
     }
 
     void draw() {
       
-       update (mouseX, mouseY);
-  background(bckColor);
-   fill(255);
-  rect(btn1X, btn1Y, btn1Width, btn1Height);
-  fill(255);
-  rect(btn2X, btn1Y, btn1Width, btn1Height);
-  rect(btn3X, btn1Y, btn1Width, btn1Height);
-  textSize(12);
-   fill(0);
-  text("Europa-Karte", btn1X+5, btn1Y+7);
-  text("Welt-Karte", btn2X+5, btn1Y+7);
-  text("Fall-Weiß", btn3X+5, btn1Y+7);
-  fill(0);
+      update (mouseX, mouseY);
+      background(bckColor);
+      fill(255);
+      rect(btn1X, btn1Y, btn1Width, btn1Height);
+      fill(255);
+      rect(btn2X, btn1Y, btn1Width, btn1Height);
+      rect(btn3X, btn1Y, btn1Width, btn1Height);
+      textSize(12);
+      fill(0);
+      text("Europa-Karte", btn1X+5, btn1Y+7);
+      text("Welt-Karte", btn2X+5, btn1Y+7);
+      text("Fall-Weiß", btn3X+5, btn1Y+7);
+      fill(0);
       
    //   background(78, 93, 75);
       
@@ -81,8 +79,8 @@ boolean btn1Over = false,
       
       stepper();
       checkPos();
-
-      
+      displayText();
+    
       /*displays sensor data on screen*/
       text("Accelerometer: " + 
             "z: " + nfp(accelerometerZ, 1, 2) + "\n" +
@@ -90,13 +88,8 @@ boolean btn1Over = false,
             nfp(degree, 1, 2) + "°" + "\n" +
             "StepsX: " + nfp(stepsX, 1, 2) + "\n" +
             "StepsY: " + nfp(stepsY, 1, 2), 0, 0, width, height);       
+      }
     }
-    }
-    /************************************************
-    *   /TODO:                                      *
-    *  here is the function to manipulate the map   *
-    *                                               *
-    ************************************************/
     
     void checkPos(){
       if(walking && stepsX <= taskPos[task][0] && stepsX > taskPos[task][1] 
@@ -117,35 +110,7 @@ boolean btn1Over = false,
       
       distVert = 10;
       distDiag = 10;
-    /*
-    if ((accelerometerZ >= 11.81 || accelerometerZ <= 7.81) && (degree >= 337.7 || degree <22.5)){
-       stepsY = stepsY+distVert;
-       }
-       else if ((accelerometerZ >= 11.81 || accelerometerZ <= 7.81) && (degree >= 22.5 && degree <67.5)){
-       stepsX = stepsX + distDiag;
-       stepsY = stepsY + distDiag;
-       }
-       else if ((accelerometerZ >= 11.81 || accelerometerZ <= 7.81) && (degree >= 67.5 && degree <112.5)){
-       stepsX = stepsX + distVert;
-       }
-       else if ((accelerometerZ >= 11.81 || accelerometerZ <= 7.81) && (degree >= 112.5 && degree <157.5)){
-       stepsX = stepsX + distDiag;
-       stepsY = stepsY - distDiag;
-       }
-       else if ((accelerometerZ >= 11.81 || accelerometerZ <= 7.81) && (degree >= 157.5 && degree <205.5)){
-       stepsY = stepsY - distVert;
-       }
-       else if ((accelerometerZ >= 11.81 || accelerometerZ <= 7.81) && (degree >= 205.5 && degree <247.5)){
-       stepsX = stepsX - distDiag;
-       stepsY = stepsY - distDiag;
-       }
-       else if ((accelerometerZ >= 11.81 || accelerometerZ <= 7.81) && (degree >= 247.5 && degree <292.5)){
-       stepsX = stepsX - distVert;
-       }
-       else if ((accelerometerZ >= 11.81 || accelerometerZ <= 7.81) && (degree >= 292.5 && degree <337.5)){
-       stepsX = stepsX - distDiag;
-       stepsY = stepsY + distDiag;
-       }*/
+   
        if(stepsX>0) stepsX=0;
         if(stepsY>0) stepsY=0;
         if(stepsX< -width*(scale-1)) stepsX=-width*(scale-1);
@@ -232,9 +197,7 @@ boolean btn1Over = false,
   }
   
 }
-
-    
-    
+ 
     boolean overBtn1(int x, int y, int width, int height){
   if (mouseX >= x && mouseX <= x+width && 
       mouseY >= y && mouseY <= y+height) {
@@ -243,3 +206,19 @@ boolean btn1Over = false,
     return false;
   }
 }
+
+void displayText(){
+      textSize(40);
+      fill(0, 102, 153, 51);
+      textAlign(CENTER, TOP);
+      text("Norden", displayWidth/2, 0);
+      fill(0, 102, 153, 51);
+      textAlign(CENTER, BOTTOM);
+      text("Süden", displayWidth/2, displayHeight-50);
+      fill(0, 102, 153, 51);
+      textAlign(LEFT);
+      text("Westen", 10, displayHeight/2);
+      fill(0, 102, 153, 51);
+      textAlign(RIGHT);
+      text("Osten", displayWidth, displayHeight/2);
+  }
