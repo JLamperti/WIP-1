@@ -47,6 +47,7 @@ void setup() {
   btn2 = loadImage("btn2.png");
   btn3 = loadImage("btn3.png");
 
+  //Legt Größe fest
   size(displayWidth, displayHeight, P3D);
   frameRate(60);
   textAlign(LEFT, TOP);
@@ -63,31 +64,19 @@ void setup() {
 void draw() {
 
   update (mouseX, mouseY);
- 
   fill(255);
-  /* rect(btn1X, btn1Y, btn1Width, btn1Height);
-   fill(255);
-   rect(btn2X, btn1Y, btn1Width, btn1Height);
-   rect(btn3X, btn1Y, btn1Width, btn1Height);
-   textSize(12);
-   fill(0);
-   text("Europa-Karte", btn1X+5, btn1Y+7);
-   text("Welt-Karte", btn2X+5, btn1Y+7);
-   text("Fall-Weiß", btn3X+5, btn1Y+7);
-   fill(0); */
+  //Lädt Buttons
   image(btn1, btn1X, btn1Y, btn1Width, btn1Height);
   image(btn2, btn2X, btn1Y, btn1Width, btn1Height);
   image(btn3, btn3X, btn1Y, btn1Width, btn1Height);
+  image(title, 0, -180, width, height);
 
-  //   background(78, 93, 75);
-  if (imageIsLoaded == false){
-    image(title, 0, -180, width, height);
-  }
+
 
   if (imageIsLoaded) {
     /*map position on screen*/
+    //Lädt die Karte, Kompassrose und Buttons
     image(img, stepsX, stepsY, width*scale, height*scale);
-    //image(rose, width-100,0,100,100);
     image(rose, 0, 0, 100, 100);
     image(btn1, btn1X, btn1Y, btn1Width, btn1Height);
     image(btn2, btn2X, btn1Y, btn1Width, btn1Height);
@@ -126,6 +115,7 @@ void stepper() {
   distVert = 10;
   distDiag = 10;
 
+  //Boundaries
   if (stepsX>0) stepsX=0;
   if (stepsY>0) stepsY=0;
   if (stepsX< -width*(scale-1)) stepsX=-width*(scale-1);
@@ -140,17 +130,17 @@ void stepper() {
 }         
 
 void mousePressed() {
-
+  //Button 1 wird gedrückt
   if (btn1Over) {
     img=loadImage("europeMap.gif");
     imageIsLoaded = true;
   }
-
+  //Button 2 wird gedrückt
   if (btn2Over) {
     img=loadImage("worldMap.png");
     imageIsLoaded = true;
   }
-
+  //Button 3 wird gedrückt
   if (btn3Over) {
     img=loadImage("Poland1939_GermanPlanMap.jpg");
     imageIsLoaded = true;
@@ -190,27 +180,27 @@ void oscEvent(OscMessage theOscMessage) {
     return;
   }
 }
-
+//Button1 Kontrolle
 void update (int x, int y) {
   if (overBtn1(btn1X, btn1Y, btn1Width, btn1Height)) {
     btn1Over = true;
   } else {
     btn1Over = false;
   }
-
+  //Button2 Kontrolle
   if (overBtn1(btn2X, btn1Y, btn1Width, btn1Height)) {
     btn2Over = true;
   } else {
     btn2Over = false;
   }
-
+  //Button3 Kontrolle
   if (overBtn1(btn3X, btn1Y, btn1Width, btn1Height)) {
     btn3Over = true;
   } else {
     btn3Over = false;
   }
 }
-
+//Funktion zur Prüfung ob Zeiger auf Button war
 boolean overBtn1(int x, int y, int width, int height) {
   if (mouseX >= x && mouseX <= x+width && 
     mouseY >= y && mouseY <= y+height) {
@@ -219,7 +209,7 @@ boolean overBtn1(int x, int y, int width, int height) {
     return false;
   }
 }
-
+// Sensordaten Anzeige 
 void displayText() {
   textSize(40);
   fill(0, 102, 153, 51);
