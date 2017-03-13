@@ -22,7 +22,7 @@ int     distVert,
 int[][] taskPos = {{-3250, -4000, -1200, -1800}, 
   {-2900, -3600, -2500, -3000}, 
   {100, 100, 100, 100}};
-PImage  img, rose, btn1, btn2, btn3;
+PImage  img, title, rose, btn1, btn2, btn3;
 
 int     btn1X = 330, 
   btn1Y = 0, 
@@ -40,6 +40,8 @@ boolean btn1Over = false,
 
 void setup() {
   accelerometerZ = 9;
+  background(bckColor);
+  title = loadImage("title.png");
   rose =loadImage("Kompassrose-no.png");
   btn1 = loadImage("btn1.png");
   btn2 = loadImage("btn2.png");
@@ -61,7 +63,7 @@ void setup() {
 void draw() {
 
   update (mouseX, mouseY);
-  background(bckColor);
+ 
   fill(255);
   /* rect(btn1X, btn1Y, btn1Width, btn1Height);
    fill(255);
@@ -78,6 +80,9 @@ void draw() {
   image(btn3, btn3X, btn1Y, btn1Width, btn1Height);
 
   //   background(78, 93, 75);
+  if (imageIsLoaded == false){
+    image(title, 0, -180, width, height);
+  }
 
   if (imageIsLoaded) {
     /*map position on screen*/
