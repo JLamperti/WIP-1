@@ -5,7 +5,7 @@
       
     OscP5 oscP5;
     NetAddress myRemoteLocation;
-    String remoteIP = "141.83.181.60";
+    String remoteIP = "141.83.181.102";
     boolean walking = false;
     float   accelerometerZ,
             direction,
