@@ -1,31 +1,3 @@
-
-    /* osc send-recieve,processing sketch */
-    
-    import oscP5.*;
-    import netP5.*;
-      
-    OscP5 oscP5;
-    NetAddress myRemoteLocation;
-    String remoteIP = "141.83.181.102";
-    boolean walking = false;
-    float   accelerometerZ,
-            direction,
-            rad,
-            degree,
-            stepsX = 0, 
-            stepsY = 0;
-    int     distVert,
-            distDiag,
-            scale = 6,
-            width1=600,
-            height1=800,
-            task = 0;
-    int[][] taskPos = {{-3250, -4000, -1200, -1800},
-                        {-2900, -3600, -2500, -3000},
-                        {100, 100, 100, 100}};
-    PImage  img;
-    
-
 /* osc send-recieve,processing sketch */
 
 import oscP5.*;
@@ -34,7 +6,8 @@ import netP5.*;
 OscP5 oscP5;
 NetAddress myRemoteLocation;
 String remoteIP = "141.83.181.60";
-boolean walking = false;
+boolean walking = false,
+        dir = false;
 float   accelerometerZ, 
   direction, 
   rad, 
@@ -42,7 +15,9 @@ float   accelerometerZ,
   stepsX = 0, 
   stepsY = 0;
 int     distVert, 
-  distDiag, 
+  distDiag,
+  velocity,
+  steps = 0,
   scale = 6, 
   width1=600, 
   height1=800, 
@@ -67,7 +42,6 @@ boolean btn1Over = false,
   imageIsLoaded = false;
 
 void setup() {
-  accelerometerZ = 9;
   background(bckColor);
   title = loadImage("title.png");
   rose =loadImage("Kompassrose-no.png");
@@ -114,11 +88,16 @@ void draw() {
     displayText();
 
     /*displays sensor data on screen*/
-    text("Accelerometer: " + 
+    text(
+      "steps: " + nfp(steps, 1, 2) + "\n" +
+      "velocity: " + nfp(velocity, 1, 2) + "\n" +
+      "Accelerometer: " + 
       "z: " + nfp(accelerometerZ, 1, 2) + "\n" +
       "Compass Direction: " +
       nfp(degree, 1, 2) + "°" + "\n" +
       "StepsX: " + nfp(stepsX, 1, 2) + "\n" +
+      "steps: " + nfp(steps, 1, 2) + "\n" +
+      "velocity: " + nfp(velocity, 1, 2) + "\n" +
       "StepsY: " + nfp(stepsY, 1, 2), 0, 0, width, height);
   }
 }
@@ -149,11 +128,34 @@ void stepper() {
   if (stepsX< -width*(scale-1)) stepsX=-width*(scale-1);
   if (stepsY < -height*(scale-1)) stepsY=-height*(scale-1);
 
-  /* if accelerometer detects a step, calculate new x- and y-position for the map */
+  /* if accelerometer detects a step, calculate new x- and y-position for the map 
+  
+    accelerometerZ?: >-0.5 or <-2.5
+    dir: wenn Änderung dann steps = 0
+    velocity = 10*Math.abs((int) (accelerometerZ + 1.25)) statt rad
+    steps: -15 - 15
+  */
 
-  if ((accelerometerZ >= 11.81 || accelerometerZ <= 7.81) && walking) {
-    stepsX = stepsX+(cos(rad)*10);
-    stepsY = stepsY+(sin(rad)*10);
+  if (accelerometerZ >= -0.5 && steps < 15 && steps >= -15 && walking) {
+    steps++;
+    if(dir){
+     steps = 0;
+     dir = false;
+    }
+    velocity = 10*Math.abs((int) (accelerometerZ + 1.25));
+    stepsX = stepsX+(cos(rad)*velocity);
+    stepsY = stepsY+(sin(rad)*velocity);
+  }
+  
+  if (accelerometerZ <= -2.5 && steps <= 15 && steps > -15 && walking) {
+    steps = steps - 1;
+    if(!dir){
+     steps = 0;
+     dir = true;
+    }
+    velocity = 10*Math.abs((int) (accelerometerZ + 1.25));
+    stepsX = stepsX+(cos(rad)*velocity);
+    stepsY = stepsY+(sin(rad)*velocity);
   }
 }         
 
