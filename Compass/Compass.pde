@@ -109,7 +109,7 @@ void mousePressed() {
 void directionEvent(float newDirection) {
   direction = newDirection - directionOffset;
   if(direction < 0){
-     direction = direction + 2*PI; 
+     direction = direction; 
   }
 }
 
@@ -122,8 +122,8 @@ void onAccelerometerEvent(float x, float y, float z) {
 
 void sendAcc(){
   if(this.started){
-    OscMessage myMessage = new OscMessage("/accelerometerZ");
-    myMessage.add(accelerometerZ);
+    OscMessage myMessage = new OscMessage("/accelerometerY");
+    myMessage.add(accelerometerY);
     oscP5.send(myMessage, myRemoteLocation); 
     println("android acc, sending to "+myRemoteLocation);
   } 

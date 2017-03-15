@@ -5,10 +5,10 @@ import netP5.*;
 
 OscP5 oscP5;
 NetAddress myRemoteLocation;
-String remoteIP = "141.83.181.60";
+String remoteIP = "141.83.180.192";
 boolean walking = false,
         dir = false;
-float   accelerometerZ, 
+float   accelerometerY, 
   direction, 
   rad, 
   degree, 
@@ -16,7 +16,7 @@ float   accelerometerZ,
   stepsY = 0;
 int     distVert, 
   distDiag,
-  velocity,
+  velocity = 10,
   steps = 0,
   scale = 6, 
   width1=600, 
@@ -42,6 +42,7 @@ boolean btn1Over = false,
   imageIsLoaded = false;
 
 void setup() {
+  accelerometerY = 9.81;
   background(bckColor);
   title = loadImage("title.png");
   rose =loadImage("Kompassrose-no.png");
@@ -92,7 +93,7 @@ void draw() {
       "steps: " + nfp(steps, 1, 2) + "\n" +
       "velocity: " + nfp(velocity, 1, 2) + "\n" +
       "Accelerometer: " + 
-      "z: " + nfp(accelerometerZ, 1, 2) + "\n" +
+      "y: " + nfp(accelerometerY, 1, 2) + "\n" +
       "Compass Direction: " +
       nfp(degree, 1, 2) + "°" + "\n" +
       "StepsX: " + nfp(stepsX, 1, 2) + "\n" +
@@ -128,23 +129,18 @@ void stepper() {
   if (stepsX< -width*(scale-1)) stepsX=-width*(scale-1);
   if (stepsY < -height*(scale-1)) stepsY=-height*(scale-1);
 
-  /* if accelerometer detects a step, calculate new x- and y-position for the map 
-  
-    accelerometerZ?: >-0.5 or <-2.5
-    dir: wenn Änderung dann steps = 0
-    velocity = 10*Math.abs((int) (accelerometerZ + 1.25)) statt rad
-    steps: -15 - 15
-  */
 
+/* beschleunigung x achse
   if (accelerometerZ >= -0.5 && steps < 15 && steps >= -15 && walking) {
     steps++;
     if(dir){
      steps = 0;
      dir = false;
-    }
-    velocity = 10*Math.abs((int) (accelerometerZ + 1.25));
+    } 
+    //velocity = 10*Math.abs((int) (accelerometerZ + 1.25));
+    velocity = 10;
     stepsX = stepsX+(cos(rad)*velocity);
-    stepsY = stepsY+(sin(rad)*velocity);
+    stepsY = stepsY-(sin(rad)*velocity);
   }
   
   if (accelerometerZ <= -2.5 && steps <= 15 && steps > -15 && walking) {
@@ -152,12 +148,22 @@ void stepper() {
     if(!dir){
      steps = 0;
      dir = true;
-    }
-    velocity = 10*Math.abs((int) (accelerometerZ + 1.25));
+    } 
+    //velocity = 10*Math.abs((int) (accelerometerZ + 1.25));
+    velocity = 10;
     stepsX = stepsX+(cos(rad)*velocity);
-    stepsY = stepsY+(sin(rad)*velocity);
+    stepsY = stepsY-(sin(rad)*velocity);
   }
-}         
+*/
+  
+  if ((accelerometerY <= -11.81 || (accelerometerY >= -7.81 && accelerometerY <= 7.81) || 
+        accelerometerY >= 11.81) && walking){
+       stepsX = stepsX+(cos(rad)*velocity);
+       stepsY = stepsY-(sin(rad)*velocity);
+       }
+
+} 
+
 
 void mousePressed() {
   //Button 1 wird gedrückt
@@ -191,8 +197,8 @@ void oscEvent(OscMessage theOscMessage) {
   println(" typetag: "+theOscMessage.typetag());
 
   /* listening to incoming sensor input */
-  if (theOscMessage.checkAddrPattern("/accelerometerZ")==true) {
-    accelerometerZ = theOscMessage.get(0).floatValue();
+  if (theOscMessage.checkAddrPattern("/accelerometerY")==true) {
+    accelerometerY = theOscMessage.get(0).floatValue();
     return;
   }
   if (theOscMessage.checkAddrPattern("/direction")==true) {

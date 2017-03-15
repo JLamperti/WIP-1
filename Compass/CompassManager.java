@@ -117,12 +117,12 @@ public class CompassManager {
 
     public void onSensorChanged(SensorEvent event) {
       float x = event.values[0];
-      float y = event.values[2];
-      float z = event.values[1];
+      float y = event.values[1];
+      float z = event.values[2];
 
       if (compassEventMethod != null) {
         try {
-          compassEventMethod.invoke(parent, new Object[] { x, y, z });
+          compassEventMethod.invoke(parent, new Object[] { x, z, y });
         } catch (Exception e) {
           e.printStackTrace();
           compassEventMethod = null;
