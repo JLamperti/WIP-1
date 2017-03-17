@@ -25,14 +25,15 @@ int     distVert,
 int[][] taskPos = {{-3250, -4000, -1200, -1800}, 
   {-2900, -3600, -2500, -3000}, 
   {100, 100, 100, 100}};
-PImage  img, title, rose, btn1, btn2, btn3,start,btnKaliTrue,btnKaliFalse;
+PImage  img, title, rose, btn1, btn2, btn3,start,btnKaliTrue,btnKaliFalse,btnEinblenden;
 
 int     btn1X = 330, 
   btn1Y = 0, 
   btn2X = 435, 
   btn3X = 540,
   btnStartX = 640,
-  btnKaliX=150;
+  btnKaliX=150,
+  btnEinblendenX=50;
 int     btn1Width = 100, 
   btn1Height = 30;
 color   btn1Color = color (255), 
@@ -43,7 +44,9 @@ boolean btn1Over = false,
   btn3Over = false, 
   btnStartOver=false,
   btnKaliOver=false,
-  imageIsLoaded = false;
+  imageIsLoaded = false,
+  btnEinblendenOver=false,
+  Ausblenden=false;
 
 void setup() {
   accelerometerY = 9.81;
@@ -55,8 +58,8 @@ void setup() {
   btn3= loadImage("btn4.png");
   btnKaliTrue=loadImage("btnKaliTrue.png");
   btnKaliFalse=loadImage("btnKaliFalse.png");
- start = loadImage("startBtn.png");
-
+ //start = loadImage("startBtn.png");
+  btnEinblenden=loadImage("EinblendenBtn2.png");
   //Legt Größe fest
   size(displayWidth, displayHeight, P3D);
   frameRate(60);
@@ -79,7 +82,7 @@ void draw() {
   image(btn1, btn1X, btn1Y, btn1Width, btn1Height);
   image(btn2, btn2X, btn1Y, btn1Width, btn1Height);
   image(btn3, btn3X, btn1Y, btn1Width, btn1Height);
- 
+ // image(btnEinblenden, btnEinblendenX, btn1Y, btn1Width, btn1Height);
   image(title, 0, -180, width, height);
 
 
@@ -90,12 +93,16 @@ void draw() {
    
     image(img, stepsX, stepsY, width*scale, height*scale);
     image(rose, 0, 0, 100, 100);
-   
+    if(!Ausblenden){
     image(btn1, btn1X, btn1Y, btn1Width, btn1Height);
     image(btn2, btn2X, btn1Y, btn1Width, btn1Height);
     image(btn3, btn3X, btn1Y, btn1Width, btn1Height);
+    image(btnKaliFalse,btnKaliX,btn1Y, btn1Width+70, btn1Height);
+    }
+
+    image(btnEinblenden, btnEinblendenX, btn1Y, btn1Width, btn1Height);
    //  image(start,btnStartX, btn1Y, btn1Width, btn1Height); //Btn Start
-   image(btnKaliFalse,btnKaliX,btn1Y, btn1Width+70, btn1Height+100);
+  
     stepper();
     checkPos();
     displayText();
@@ -203,6 +210,13 @@ void mousePressed() {
    //calibrate();
       btnKaliFalse=btnKaliTrue;
   }
+    if (btnEinblendenOver) {
+   Ausblenden=!Ausblenden;
+if(Ausblenden){
+  btnEinblenden=loadImage("EinblendenBtn.png");
+}else btnEinblenden=loadImage("EinblendenBtn2.png");
+  } 
+  
 
   /* send a message to client on mouse (touch) click */
   // OscMessage myMessage = new OscMessage("/test");
@@ -264,10 +278,15 @@ void update (int x, int y) {
     btnStartOver = false;
   }*/
   
-    if (overBtn1(btnKaliX, btn1Y, btn1Width+70, btn1Height+100)) {
+    if (overBtn1(btnKaliX, btn1Y, btn1Width+70, btn1Height)) {
     btnKaliOver = true;
   } else {
     btnKaliOver = false;
+  }
+      if (overBtn1(btnEinblendenX, btn1Y, btn1Width, btn1Height)) {
+    btnEinblendenOver = true;
+  } else {
+       btnEinblendenOver  = false;
   }
 }
 //Funktion zur Prüfung ob Zeiger auf Button war
