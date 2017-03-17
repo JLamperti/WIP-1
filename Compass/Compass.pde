@@ -1,11 +1,13 @@
   import oscP5.*;
   import netP5.*;
   import ketai.sensors.*;
+  import ketai.ui.*;
 
 OscP5 oscP5;
 NetAddress myRemoteLocation;
 KetaiSensor sensor;
 CompassManager compass;
+KetaiVibrate vibe;
 String remoteIP = "141.83.180.238";
 PVector accelerometer;
 int task = 0;
@@ -36,6 +38,8 @@ void setup() {
   img[0] = loadImage("brandenburg.PNG");
   img[1] = loadImage("pisa.PNG");
   img[2] = loadImage("smile.png");
+  
+  vibe = new KetaiVibrate(this);
 }
 
 void pause() {
@@ -47,7 +51,7 @@ void resume() {
 }
 
 void draw() {
- 
+
   /*show sensor datas and compass*/
   background(0, 0, 0);
   fill(0, 0, 0);
@@ -107,9 +111,11 @@ void mousePressed() {
     }
 
 void calibrate(){
-  this.directionOffset = direction - PI/2;
+  this.directionOffset = direction + PI/2;
+  if(!calibrated){
+    this.started= !this.started;
+  }
   this.calibrated = true;
-  this.started= !this.started;
   startStopWalking();
 }
 

@@ -5,7 +5,7 @@ import netP5.*;
 
 OscP5 oscP5;
 NetAddress myRemoteLocation;
-String remoteIP = "141.83.180.192";
+String remoteIP = "141.83.180.91";
 boolean walking = false,
         dir = false;
 float   accelerometerY, 
@@ -200,7 +200,7 @@ void mousePressed() {
     imageIsLoaded = true;
   } 
     if (btnKaliOver) {
-   //calibrate();
+   calibrate();
       btnKaliFalse=btnKaliTrue;
   }
 
