@@ -200,8 +200,8 @@ void mousePressed() {
     imageIsLoaded = true;
   } 
     if (btnKaliOver) {
-   calibrate();
-   
+   //calibrate();
+      btnKaliFalse=btnKaliTrue;
   }
 
   /* send a message to client on mouse (touch) click */
@@ -257,10 +257,17 @@ void update (int x, int y) {
   } else {
     btn3Over = false;
   }
+  /*
    if ( overBtn1(btnStartX, btn1Y, btn1Width+70, btn1Height+100)) {
     btnStartOver = true;
   } else {
     btnStartOver = false;
+  }*/
+  
+    if (overBtn1(btnKaliX, btn1Y, btn1Width+70, btn1Height+100)) {
+    btnKaliOver = true;
+  } else {
+    btnKaliOver = false;
   }
 }
 //Funktion zur Prüfung ob Zeiger auf Button war
