@@ -25,12 +25,14 @@ int     distVert,
 int[][] taskPos = {{-3250, -4000, -1200, -1800}, 
   {-2900, -3600, -2500, -3000}, 
   {100, 100, 100, 100}};
-PImage  img, title, rose, btn1, btn2, btn3;
+PImage  img, title, rose, btn1, btn2, btn3,start,btnKaliTrue,btnKaliFalse;
 
 int     btn1X = 330, 
   btn1Y = 0, 
   btn2X = 435, 
-  btn3X = 540;
+  btn3X = 540,
+  btnStartX = 640,
+  btnKaliX=150;
 int     btn1Width = 100, 
   btn1Height = 30;
 color   btn1Color = color (255), 
@@ -39,6 +41,8 @@ color   btn1Color = color (255),
 boolean btn1Over = false, 
   btn2Over = false, 
   btn3Over = false, 
+  btnStartOver=false,
+  btnKaliOver=false,
   imageIsLoaded = false;
 
 void setup() {
@@ -48,7 +52,10 @@ void setup() {
   rose =loadImage("Kompassrose-no.png");
   btn1 = loadImage("btn1.png");
   btn2 = loadImage("btn2.png");
-  btn3 = loadImage("btn3.png");
+  btn3= loadImage("btn4.png");
+  btnKaliTrue=loadImage("btnKaliTrue.png");
+  btnKaliFalse=loadImage("btnKaliFalse.png");
+ start = loadImage("startBtn.png");
 
   //Legt Größe fest
   size(displayWidth, displayHeight, P3D);
@@ -72,6 +79,7 @@ void draw() {
   image(btn1, btn1X, btn1Y, btn1Width, btn1Height);
   image(btn2, btn2X, btn1Y, btn1Width, btn1Height);
   image(btn3, btn3X, btn1Y, btn1Width, btn1Height);
+ 
   image(title, 0, -180, width, height);
 
 
@@ -79,11 +87,15 @@ void draw() {
   if (imageIsLoaded) {
     /*map position on screen*/
     //Lädt die Karte, Kompassrose und Buttons
+   
     image(img, stepsX, stepsY, width*scale, height*scale);
     image(rose, 0, 0, 100, 100);
+   
     image(btn1, btn1X, btn1Y, btn1Width, btn1Height);
     image(btn2, btn2X, btn1Y, btn1Width, btn1Height);
     image(btn3, btn3X, btn1Y, btn1Width, btn1Height);
+   //  image(start,btnStartX, btn1Y, btn1Width, btn1Height); //Btn Start
+   image(btnKaliFalse,btnKaliX,btn1Y, btn1Width+70, btn1Height+100);
     stepper();
     checkPos();
     displayText();
@@ -111,6 +123,12 @@ void checkPos() {
     oscP5.send(myMessage, myRemoteLocation);
     this.task++;
   }
+}
+
+void calibrate() {
+  OscMessage myMessage = new OscMessage("/calibrate");
+    myMessage.add("sendingPosition");
+    oscP5.send(myMessage, myRemoteLocation);
 }
 
 void stepper() { 
@@ -178,8 +196,12 @@ void mousePressed() {
   }
   //Button 3 wird gedrückt
   if (btn3Over) {
-    img=loadImage("Poland1939_GermanPlanMap.jpg");
+    img=loadImage("800px-BRD.png");
     imageIsLoaded = true;
+  } 
+    if (btnKaliOver) {
+   calibrate();
+   
   }
 
   /* send a message to client on mouse (touch) click */
@@ -234,6 +256,11 @@ void update (int x, int y) {
     btn3Over = true;
   } else {
     btn3Over = false;
+  }
+   if ( overBtn1(btnStartX, btn1Y, btn1Width+70, btn1Height+100)) {
+    btnStartOver = true;
+  } else {
+    btnStartOver = false;
   }
 }
 //Funktion zur Prüfung ob Zeiger auf Button war
