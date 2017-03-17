@@ -27,14 +27,15 @@ int[][] taskPos = {{-3250, -4000, -1200, -1800},
   {100, 100, 100, 100}};
 PImage  img, title, rose, btn1, btn2, btn3,start,btnKaliTrue,btnKaliFalse,btnEinblenden;
 
-int     btn1X = 330, 
+int      btnKaliX=200,
+  btn1X = 360, 
   btn1Y = 0, 
-  btn2X = 435, 
-  btn3X = 540,
-  btnStartX = 640,
-  btnKaliX=150,
-  btnEinblendenX=50;
-int     btn1Width = 100, 
+  btn2X =520, 
+  btn3X = 680,
+  //btnStartX = 640,
+ 
+  btnEinblendenX=70;
+int     btn1Width = 150, 
   btn1Height = 30;
 color   btn1Color = color (255), 
   btn1Highlight = color (200), 
@@ -97,7 +98,7 @@ void draw() {
     image(btn1, btn1X, btn1Y, btn1Width, btn1Height);
     image(btn2, btn2X, btn1Y, btn1Width, btn1Height);
     image(btn3, btn3X, btn1Y, btn1Width, btn1Height);
-    image(btnKaliFalse,btnKaliX,btn1Y, btn1Width+70, btn1Height);
+    image(btnKaliFalse,btnKaliX,btn1Y, btn1Width, btn1Height);
     }
 
     image(btnEinblenden, btnEinblendenX, btn1Y, btn1Width, btn1Height);
@@ -278,7 +279,7 @@ void update (int x, int y) {
     btnStartOver = false;
   }*/
   
-    if (overBtn1(btnKaliX, btn1Y, btn1Width+70, btn1Height)) {
+    if (overBtn1(btnKaliX, btn1Y, btn1Width, btn1Height)) {
     btnKaliOver = true;
   } else {
     btnKaliOver = false;
