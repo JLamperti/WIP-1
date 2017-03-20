@@ -1,30 +1,42 @@
-/* osc send-recieve,processing sketch */
+/* Server für Kartendarstellung und Kommunikation mit Smartphone */
 
 import oscP5.*;
 import netP5.*;
 
+//Initialisieren der OSCP5 Library
 OscP5 oscP5;
+//Setzen der IP-Adresse des Smartphones
 NetAddress myRemoteLocation;
-String remoteIP = "141.83.180.91";
-boolean walking = false,
-        dir = false;
+String remoteIP = "141.83.181.62";
+
+//Walking = Bewegung vorerst gestoppt
+boolean walking = false;
+//        dir = false;    zur Vermeidung von "Sliding in Place"
+
+/*Y-Achse des Beschleunigungssensor, Ausrichtung des Handys, 
+Ausrichtung in Bogenmaß, Ausrichtung in Grad, X- und Y-Position der Karte */
 float   accelerometerY, 
   direction, 
   rad, 
   degree, 
   stepsX = 0, 
   stepsY = 0;
-int     distVert, 
-  distDiag,
-  velocity = 10,
+
+/* Gehgeschwindigkeit, Schrittzähler, Skalierung der Karte, Breite der Anzeige, Höhe der Anzeige,
+aktuelle Aufgabe */
+int  velocity = 10,
   steps = 0,
   scale = 6, 
   width1=600, 
   height1=800, 
   task = 0;
+
+//Zielkoordinaten der Aufgaben
 int[][] taskPos = {{-3250, -4000, -1200, -1800}, 
   {-2900, -3600, -2500, -3000}, 
+  //nicht erreichbare Koordinaten, wenn Aufgaben beendet sind
   {100, 100, 100, 100}};
+
 PImage  img, title, rose, btn1, btn2, btn3,start,btnKaliTrue,btnKaliFalse,btnEinblenden;
 
 int      btnKaliX=200,

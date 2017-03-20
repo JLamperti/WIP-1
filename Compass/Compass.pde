@@ -8,7 +8,7 @@ NetAddress myRemoteLocation;
 KetaiSensor sensor;
 CompassManager compass;
 KetaiVibrate vibe;
-String remoteIP = "141.83.180.238";
+String remoteIP = "141.83.181.71";
 PVector accelerometer;
 int task = 0;
 float direction;
@@ -104,6 +104,7 @@ void mousePressed() {
       
       if (theOscMessage.checkAddrPattern("/nextTask")==true) {
         this.task++;
+        vibe.vibrate(1000);
       }
       if (theOscMessage.checkAddrPattern("/calibrate")==true) {
         calibrate();
