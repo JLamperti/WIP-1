@@ -167,8 +167,7 @@ void stepper() {
   /*translate radiant to degree */
   degree = (360/(2*PI))*rad;
 
-  distVert = 10;
-  distDiag = 10;
+ 
 
   //Boundaries
   if (stepsX>0) stepsX=0;
