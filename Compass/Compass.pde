@@ -8,7 +8,7 @@ NetAddress myRemoteLocation;
 KetaiSensor sensor;
 CompassManager compass;
 KetaiVibrate vibe;
-String remoteIP = "141.83.181.71";
+String remoteIP = "192.168.2.103";
 PVector accelerometer;
 int task = 0;
 float direction;

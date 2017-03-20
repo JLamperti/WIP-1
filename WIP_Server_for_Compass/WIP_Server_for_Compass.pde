@@ -9,7 +9,7 @@ OscP5 oscP5;
 NetAddress myRemoteLocation;
 //Setzen der IP-Adresse des Smartphones
 
-String remoteIP = "141.83.180.91";
+String remoteIP = "192.168.2.101";
 //Walking = Bewegung vorerst gestoppt
 
 boolean walking = false, 
@@ -132,8 +132,11 @@ void draw() {
       if (AufgabeStarten==1) {
         image(Aufgabe, bildAufgabeX, 910, 150, 150);
         //  displayAufgabeText();
-        
-        
+      }
+       if (AufgabeStarten==1 && task ==1) {
+         Aufgabe=loadImage("pisa.PNG");
+        image(Aufgabe, bildAufgabeX, 910, 150, 150);
+        //  displayAufgabeText();
       }
     }
 
