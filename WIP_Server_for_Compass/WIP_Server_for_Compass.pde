@@ -4,49 +4,54 @@ import oscP5.*;
 import netP5.*;
 
 //Initialisieren der OSCP5 Library
-OscP5 oscP5;
-//Setzen der IP-Adresse des Smartphones
-NetAddress myRemoteLocation;
-String remoteIP = "141.83.181.62";
 
+OscP5 oscP5;
+NetAddress myRemoteLocation;
+//Setzen der IP-Adresse des Smartphones
+
+String remoteIP = "141.83.180.91";
 //Walking = Bewegung vorerst gestoppt
-boolean walking = false;
+
+boolean walking = false,
 //        dir = false;    zur Vermeidung von "Sliding in Place"
 
 /*Y-Achse des Beschleunigungssensor, Ausrichtung des Handys, 
 Ausrichtung in Bogenmaß, Ausrichtung in Grad, X- und Y-Position der Karte */
+        dir = false;
 float   accelerometerY, 
   direction, 
   rad, 
   degree, 
   stepsX = 0, 
   stepsY = 0;
-
-/* Gehgeschwindigkeit, Schrittzähler, Skalierung der Karte, Breite der Anzeige, Höhe der Anzeige,
+  
+  /* Gehgeschwindigkeit, Schrittzähler, Skalierung der Karte, Breite der Anzeige, Höhe der Anzeige,
 aktuelle Aufgabe */
-int  velocity = 10,
+int  
+  velocity = 10,
   steps = 0,
   scale = 6, 
   width1=600, 
   height1=800, 
   task = 0;
+  //Zielkoordinaten der Aufgaben
 
-//Zielkoordinaten der Aufgaben
 int[][] taskPos = {{-3250, -4000, -1200, -1800}, 
   {-2900, -3600, -2500, -3000}, 
-  //nicht erreichbare Koordinaten, wenn Aufgaben beendet sind
-  {100, 100, 100, 100}};
+    //nicht erreichbare Koordinaten, wenn Aufgaben beendet sind
 
-PImage  img, title, rose, btn1, btn2, btn3,start,btnKaliTrue,btnKaliFalse,btnEinblenden;
+  {100, 100, 100, 100}};
+PImage  img, title, rose, btn1, btn2, btn3,start,btnKaliTrue,btnKaliFalse,btnEinblenden,btnAufgabeStart,Aufgabe;
 
 int      btnKaliX=200,
   btn1X = 360, 
   btn1Y = 0, 
   btn2X =520, 
   btn3X = 680,
-  //btnStartX = 640,
- 
-  btnEinblendenX=70;
+  btnAufgabeStartX = 1080,
+  btnEinblendenX=70,
+  bildAufgabeX=1775,
+  AufgabeStarten=0; // Welche Aufgabe ist gerade aktiv
 int     btn1Width = 150, 
   btn1Height = 30;
 color   btn1Color = color (255), 
@@ -57,6 +62,7 @@ boolean btn1Over = false,
   btn3Over = false, 
   btnStartOver=false,
   btnKaliOver=false,
+  btnAufgabeStartOver=false,
   imageIsLoaded = false,
   btnEinblendenOver=false,
   Ausblenden=false;
@@ -71,8 +77,9 @@ void setup() {
   btn3= loadImage("btn4.png");
   btnKaliTrue=loadImage("btnKaliTrue.png");
   btnKaliFalse=loadImage("btnKaliFalse.png");
- //start = loadImage("startBtn.png");
+  btnAufgabeStart = loadImage("btnAufgabe.png");
   btnEinblenden=loadImage("EinblendenBtn2.png");
+  Aufgabe=loadImage("brandenburg.PNG");
   //Legt Größe fest
   size(displayWidth, displayHeight, P3D);
   frameRate(60);
@@ -111,6 +118,8 @@ void draw() {
     image(btn2, btn2X, btn1Y, btn1Width, btn1Height);
     image(btn3, btn3X, btn1Y, btn1Width, btn1Height);
     image(btnKaliFalse,btnKaliX,btn1Y, btn1Width, btn1Height);
+    image(btnAufgabeStart, btnAufgabeStartX, btn1Y, btn1Width, btn1Height);
+    if(AufgabeStarten==1)  image(Aufgabe, bildAufgabeX, 910, 150, 150);
     }
 
     image(btnEinblenden, btnEinblendenX, btn1Y, btn1Width, btn1Height);
@@ -230,6 +239,10 @@ if(Ausblenden){
 }else btnEinblenden=loadImage("EinblendenBtn2.png");
   } 
   
+  if(btnAufgabeStartOver){
+       AufgabeStarten=1;
+  }
+  
 
   /* send a message to client on mouse (touch) click */
   // OscMessage myMessage = new OscMessage("/test");
@@ -300,6 +313,11 @@ void update (int x, int y) {
     btnEinblendenOver = true;
   } else {
        btnEinblendenOver  = false;
+  }
+        if (overBtn1(btnAufgabeStartX, btn1Y, btn1Width, btn1Height)) {
+   btnAufgabeStartOver=true;
+  } else {
+       btnAufgabeStartOver  = false;
   }
 }
 //Funktion zur Prüfung ob Zeiger auf Button war
