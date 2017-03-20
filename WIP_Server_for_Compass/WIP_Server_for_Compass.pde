@@ -123,15 +123,17 @@ void draw() {
       image(btnAufgabeStart, btnAufgabeStartX, btn1Y, btn1Width, btn1Height);
 
 
-    if (millis()<ersterTimer) {
+    if (millis()<ersterTimer && firstStart) {
       textSize(40);
       text("Drücke oben links um das Gerät zu kalibrieren", 1500, 500);
       fill(255);
-    }
+    }else firstStart =false;
 
       if (AufgabeStarten==1) {
         image(Aufgabe, bildAufgabeX, 910, 150, 150);
         //  displayAufgabeText();
+        
+        
       }
     }
 
