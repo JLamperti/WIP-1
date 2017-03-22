@@ -18,15 +18,8 @@ boolean walking = false,
 /*Y-Achse des Beschleunigungssensor, Ausrichtung des Handys, 
  Ausrichtung in Bogenmaß, Ausrichtung in Grad, X- und Y-Position der Karte */
   dir = false;
-float   accelerometerY,
-  accelerometerZ,
-  direction, 
-  rad, 
-  degree, 
-  stepsX = 0, 
-  stepsY = 0;
-
-/* Gehgeschwindigkeit, Schrittzähler, Skalierung der Karte, Breite der Anzeige, Höhe der Anzeige,
+  
+  /* Gehgeschwindigkeit, Schrittzähler, Skalierung der Karte, Breite der Anzeige, Höhe der Anzeige,
  aktuelle Aufgabe */
 int  
   velocity = 10, 
@@ -35,6 +28,15 @@ int
   width1=600, 
   height1=800, 
   task = 0;
+  
+float   accelerometerY,
+  accelerometerZ,
+  direction, 
+  rad, 
+  degree, 
+  stepsX = -(width1*(scale/2)), 
+  stepsY = -(height1*(scale/2));
+
 //Zielkoordinaten der Aufgaben
 
 int[][] taskPos = {{-3250, -4000, -1200, -1800}, 
@@ -42,14 +44,15 @@ int[][] taskPos = {{-3250, -4000, -1200, -1800},
   //nicht erreichbare Koordinaten, wenn Aufgaben beendet sind
 
   {100, 100, 100, 100}};
-PImage  img, title, rose, btn1, btn2, btn3, start, btnKaliTrue, btnKaliFalse, btnEinblenden, btnAufgabeStart, Aufgabe, radiobtnOn, radiobtnOff;
+PImage  img, title, rose, btn1, btn2, btn3, start, btnKaliTrue, btnKaliFalse, btnEinblenden, btnAufgabeStart, Aufgabe, radiobtnOn, radiobtnOff,button_hauptmenue;
 
 int      btnKaliX=200, 
   btn1X = 360, 
   btn1Y = 0, 
   btn2X =520, 
   btn3X = 680, 
-  btnAufgabeStartX = 1080, 
+  btnAufgabeStartX = 1060,
+  button_hauptmenueX=1215,
   btnEinblendenX=70, 
   bildAufgabeX=1775, 
   AufgabeStarten=0, // Welche Aufgabe ist gerade aktiv
@@ -57,6 +60,7 @@ int      btnKaliX=200,
   radiobtn1X=100,
   radiobtn1Y=600,
   radiobtn2Y=650;
+
   
 int     btn1Width = 150, 
   btn1Height = 30;
@@ -94,6 +98,7 @@ void setup() {
   Aufgabe=loadImage("Aufgabe1.png");
   radiobtnOff=loadImage("radiobtnOff.png");
   radiobtnOn=loadImage("radiobtnOn.png");
+  button_hauptmenue=loadImage("button_hauptmenue.png");
   
   //Legt Größe fest
   size(displayWidth, displayHeight, P3D);
@@ -112,6 +117,7 @@ void setup() {
 void draw() {
 
   update (mouseX, mouseY);
+  
   fill(255);
   //Lädt Buttons
   image(btn1, btn1X, btn1Y, btn1Width, btn1Height);
@@ -121,18 +127,18 @@ void draw() {
   image(title, 0, -180, width, height);
   
   if(radiobtn1){
-image(radiobtnOn, radiobtn1X,radiobtn1Y, 50,50);
-image(radiobtnOff, radiobtn1X,radiobtn2Y, 50,50);
-  textSize(20);
+      image(radiobtnOn, radiobtn1X,radiobtn1Y, 50,50);
+      image(radiobtnOff, radiobtn1X,radiobtn2Y, 50,50);
+      textSize(20);
+      fill(0);
       text("Smartphone in der Tasche", radiobtn1X+50, radiobtn1Y+10);
+      textSize(20);
       fill(0);
-        textSize(20);
       text("Smartphone in der Hand", radiobtn1X+50, radiobtn2Y+10);
-      fill(0);
   }
   if(radiobtn2){
-image(radiobtnOff, radiobtn1X,radiobtn1Y, 50,50);
-image(radiobtnOn, radiobtn1X,radiobtn2Y, 50,50);
+      image(radiobtnOff, radiobtn1X,radiobtn1Y, 50,50);
+      image(radiobtnOn, radiobtn1X,radiobtn2Y, 50,50);
   }
 
 
@@ -148,11 +154,12 @@ image(radiobtnOn, radiobtn1X,radiobtn2Y, 50,50);
       image(btn3, btn3X, btn1Y, btn1Width, btn1Height);
       image(btnKaliFalse, btnKaliX, btn1Y, btn1Width, btn1Height);
       image(btnAufgabeStart, btnAufgabeStartX, btn1Y, btn1Width, btn1Height);
+      image(button_hauptmenue, button_hauptmenueX, btn1Y, btn1Width, btn1Height);
 
 
     if (millis()<ersterTimer && firstStart) {
       textSize(40);
-      text("Drücke oben links um das Gerät zu kalibrieren", 1500, 500);
+      text("Drücke oben links um das Gerät zu kalibrieren", 1000, 500);
       fill(255);
     }else firstStart =false;
 
@@ -175,7 +182,7 @@ image(radiobtnOn, radiobtn1X,radiobtn2Y, 50,50);
     displayText();
 
     /*displays sensor data on screen*/
-    text(
+/*    text(
       "steps: " + nfp(steps, 1, 2) + "\n" +
       "velocity: " + nfp(velocity, 1, 2) + "\n" +
       "Accelerometer: " + 
@@ -188,6 +195,7 @@ image(radiobtnOn, radiobtn1X,radiobtn2Y, 50,50);
       "steps: " + nfp(steps, 1, 2) + "\n" +
       "velocity: " + nfp(velocity, 1, 2) + "\n" +
       "StepsY: " + nfp(stepsY, 1, 2), 0, 0, width, height);
+      */
   }
  
 }
@@ -391,6 +399,11 @@ void update (int x, int y) {
     btnAufgabeStartOver=true;
   } else {
     btnAufgabeStartOver  = false;
+  }
+  if(overBtn1(button_hauptmenueX, btn1Y, btn1Width, btn1Height)) {
+    
+  } else{
+    
   }
   
   if (overBtn1(radiobtn1X, radiobtn1Y, 50, 50)) {
