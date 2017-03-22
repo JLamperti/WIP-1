@@ -1,15 +1,13 @@
+//Der Compass-Manager reicht die Sensorwerte des Handys an die Compass-Klasse weiter
+
 import processing.core.PApplet;
-
-
 import java.lang.reflect.*;
 import java.util.List;
-
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-
 
 public class CompassManager {
   private Sensor sensor;
@@ -24,10 +22,13 @@ public class CompassManager {
   PApplet parent;
   Context context;
   
+  //initialisieren des Compass-Managers
   public CompassManager(PApplet parent) {
     this.parent = parent;
     this.context = parent.getActivity();
 
+
+    //Übernehmen der CompassEvent- und der DirectionEvent-Methode aus der Parent-Klasse
     try {
       compassEventMethod =
         parent.getClass().getMethod("compassEvent", new Class[] { Float.TYPE, Float.TYPE, Float.TYPE });
@@ -45,14 +46,14 @@ public class CompassManager {
     resume();
   }
 
-
+  //Fortsetzen des Auslesens der Sensordaten
   public void resume() {
     if (isSupported()) {
       startListening();
     }
   }
 
-
+  //Anhalten des Auslesens der Sensordaten
   public void pause() {
     if (isListening()) {
       stopListening();
@@ -60,9 +61,7 @@ public class CompassManager {
   }
 
 
-  /**
-   * Returns true if the manager is listening to orientation changes
-   */
+  //Gibt true zurück, wenn der Manager auf Änderungen der Ausrichtung horcht
   public boolean isListening() {
     return running;
   }
@@ -83,9 +82,8 @@ public class CompassManager {
   }
 
 
-  /**
-   * Returns true if at least one Accelerometer sensor is available
-   */
+
+  //Gibt true zurück, wenn einer der Beschleunigungssensoren Daten sendet
   public boolean isSupported() {
     if (supported == null) {
       sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
@@ -95,7 +93,7 @@ public class CompassManager {
     return supported;
   }
 
-
+  //Beginne, die Sensordaten abzufragen
   public void startListening() {
     sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
     List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
@@ -106,11 +104,9 @@ public class CompassManager {
   }
 
 
-  /**
-   * The listener that listen to events from the accelerometer listener
-   */
+  //Initialisieren des SensorEventListeners
   private SensorEventListener sensorEventListener = new SensorEventListener() {
-
+    
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
       // ignored for now
     }
