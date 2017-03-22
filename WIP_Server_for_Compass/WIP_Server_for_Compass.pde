@@ -44,7 +44,7 @@ int[][] taskPos = {{-3250, -4000, -1200, -1800},
   //nicht erreichbare Koordinaten, wenn Aufgaben beendet sind
 
   {100, 100, 100, 100}};
-PImage  img, title, rose, btn1, btn2, btn3, start, btnKaliTrue, btnKaliFalse, btnEinblenden, btnAufgabeStart, Aufgabe, radiobtnOn, radiobtnOff,button_hauptmenue;
+PImage  img, title, rose, btn1, btn2, btn3, start, btnKaliTrue, btnKaliFalse, btnEinblenden, btnAufgabeStart, Aufgabe, radiobtnOn, radiobtnOff,button_hauptmenue,hintergrundmenue;
 
 int      btnKaliX=200, 
   btn1X = 360, 
@@ -77,10 +77,12 @@ boolean btn1Over = false,
   btnAufgabeStartOver=false, 
   imageIsLoaded = false, 
   btnEinblendenOver=false, 
+  btnHauptmenueOver=false,
   Ausblenden=false, 
   firstStart=true,
   radiobtn1=true,
   radiobtn2=false;
+  //Hauptmenü=true;
 
 void setup() {
   accelerometerY = 9.81;
@@ -99,7 +101,8 @@ void setup() {
   radiobtnOff=loadImage("radiobtnOff.png");
   radiobtnOn=loadImage("radiobtnOn.png");
   button_hauptmenue=loadImage("button_hauptmenue.png");
-  
+  hintergrundmenue=loadImage("Hintergrund_menue.png");
+  img=loadImage("Hintergrund_menue.png");
   //Legt Größe fest
   size(displayWidth, displayHeight, P3D);
   frameRate(60);
@@ -120,7 +123,10 @@ void draw() {
   
   fill(255);
   //Lädt Buttons
+    image(img, stepsX, stepsY, width*scale, height*scale);
   image(btn1, btn1X, btn1Y, btn1Width, btn1Height);
+
+
   image(btn2, btn2X, btn1Y, btn1Width, btn1Height);
   image(btn3, btn3X, btn1Y, btn1Width, btn1Height);
   // image(btnEinblenden, btnEinblendenX, btn1Y, btn1Width, btn1Height);
@@ -139,6 +145,11 @@ void draw() {
   if(radiobtn2){
       image(radiobtnOff, radiobtn1X,radiobtn1Y, 50,50);
       image(radiobtnOn, radiobtn1X,radiobtn2Y, 50,50);
+       fill(0);
+      text("Smartphone in der Tasche", radiobtn1X+50, radiobtn1Y+10);
+      textSize(20);
+      fill(0);
+      text("Smartphone in der Hand", radiobtn1X+50, radiobtn2Y+10);
   }
 
 
@@ -321,6 +332,12 @@ void mousePressed() {
   myMessage.add(radiobtn1);
   oscP5.send(myMessage, myRemoteLocation); 
   }
+  
+  if(btnHauptmenueOver){
+    imageIsLoaded=false;
+    img=loadImage("Hintergrund_menue.png");
+    walking=false;
+  }
 
 
   /* send a message to client on mouse (touch) click */
@@ -401,9 +418,9 @@ void update (int x, int y) {
     btnAufgabeStartOver  = false;
   }
   if(overBtn1(button_hauptmenueX, btn1Y, btn1Width, btn1Height)) {
-    
+    btnHauptmenueOver=true;
   } else{
-    
+    btnHauptmenueOver=false;
   }
   
   if (overBtn1(radiobtn1X, radiobtn1Y, 50, 50)) {
