@@ -118,7 +118,12 @@ public class CompassManager {
 
       if (compassEventMethod != null) {
         try {
+          if (Compass.pocket == true){
           compassEventMethod.invoke(parent, new Object[] { x, z, y });
+          }
+          else{
+            compassEventMethod.invoke(parent, new Object[] { x, y, z });
+          }
         } catch (Exception e) {
           e.printStackTrace();
           compassEventMethod = null;

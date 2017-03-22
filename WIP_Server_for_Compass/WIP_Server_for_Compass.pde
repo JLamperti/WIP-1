@@ -7,18 +7,19 @@ import netP5.*;
 
 OscP5 oscP5;
 NetAddress myRemoteLocation;
+
 //Setzen der IP-Adresse des Smartphones
+String remoteIP = "141.83.181.72";
 
-String remoteIP = "192.168.2.101";
 //Walking = Bewegung vorerst gestoppt
-
 boolean walking = false, 
   //        dir = false;    zur Vermeidung von "Sliding in Place"
 
 /*Y-Achse des Beschleunigungssensor, Ausrichtung des Handys, 
  Ausrichtung in Bogenmaß, Ausrichtung in Grad, X- und Y-Position der Karte */
   dir = false;
-float   accelerometerY, 
+float   accelerometerY,
+  accelerometerZ,
   direction, 
   rad, 
   degree, 
@@ -54,14 +55,14 @@ int      btnKaliX=200,
   AufgabeStarten=0, // Welche Aufgabe ist gerade aktiv
   ersterTimer,
   radiobtn1X=100,
-  radiobtn1Y=100,
-  radiobtn2Y=150;
+  radiobtn1Y=600,
+  radiobtn2Y=650;
   
 int     btn1Width = 150, 
   btn1Height = 30;
 color   btn1Color = color (255), 
   btn1Highlight = color (200), 
-  bckColor = color(0);
+  bckColor = color(255);
 boolean btn1Over = false, 
   btn2Over = false, 
   btn3Over = false, 
@@ -123,11 +124,11 @@ void draw() {
 image(radiobtnOn, radiobtn1X,radiobtn1Y, 50,50);
 image(radiobtnOff, radiobtn1X,radiobtn2Y, 50,50);
   textSize(20);
-      text("Auswahl 1", radiobtn1X+50, radiobtn1Y+10);
-      fill(255);
+      text("Smartphone in der Tasche", radiobtn1X+50, radiobtn1Y+10);
+      fill(0);
         textSize(20);
-      text("Auswahl 2", radiobtn1X+50, radiobtn2Y+10);
-      fill(255);
+      text("Smartphone in der Hand", radiobtn1X+50, radiobtn2Y+10);
+      fill(0);
   }
   if(radiobtn2){
 image(radiobtnOff, radiobtn1X,radiobtn1Y, 50,50);
@@ -179,6 +180,8 @@ image(radiobtnOn, radiobtn1X,radiobtn2Y, 50,50);
       "velocity: " + nfp(velocity, 1, 2) + "\n" +
       "Accelerometer: " + 
       "y: " + nfp(accelerometerY, 1, 2) + "\n" +
+      "Accelerometer: " + 
+      "z: " + nfp(accelerometerZ, 1, 2) + "\n" +
       "Compass Direction: " +
       nfp(degree, 1, 2) + "°" + "\n" +
       "StepsX: " + nfp(stepsX, 1, 2) + "\n" +
@@ -248,10 +251,20 @@ void stepper() {
    */
 
   if ((accelerometerY <= -11.81 || (accelerometerY >= -7.81 && accelerometerY <= 7.81) || 
-    accelerometerY >= 11.81) && walking) {
+    accelerometerY >= 11.81) && walking && radiobtn1) {
     stepsX = stepsX+(cos(rad)*velocity);
     stepsY = stepsY-(sin(rad)*velocity);
   }
+ 
+  if (accelerometerZ >= 11.81 || accelerometerZ <= 7.81 && walking &&
+    radiobtn2){
+      velocity = Math.abs((int) accelerometerZ);
+       stepsX = stepsX+(cos(rad)*velocity);
+       stepsY = stepsY-(sin(rad)*velocity);
+       }
+     else {
+
+       }
 } 
 
 
@@ -289,10 +302,16 @@ void mousePressed() {
     if (radiobtn1Over) {
     radiobtn1=true;
     radiobtn2=false;
+    OscMessage myMessage = new OscMessage("/pocket");
+  myMessage.add(radiobtn1);
+  oscP5.send(myMessage, myRemoteLocation); 
   }
      if (radiobtn2Over) {
     radiobtn2=true;
     radiobtn1=false;
+    OscMessage myMessage = new OscMessage("/pocket");
+  myMessage.add(radiobtn1);
+  oscP5.send(myMessage, myRemoteLocation); 
   }
 
 
@@ -311,10 +330,12 @@ void oscEvent(OscMessage theOscMessage) {
   println(" typetag: "+theOscMessage.typetag());
 
   /* listening to incoming sensor input */
-  if (theOscMessage.checkAddrPattern("/accelerometerY")==true) {
+  if (theOscMessage.checkAddrPattern("/accelerometer")==true) {
     accelerometerY = theOscMessage.get(0).floatValue();
+    accelerometerZ = theOscMessage.get(1).floatValue();
     return;
   }
+  
   if (theOscMessage.checkAddrPattern("/direction")==true) {
     direction = theOscMessage.get(0).floatValue();
     return;

@@ -10,16 +10,12 @@ OscP5 oscP5;
 
 //Setzen der IP-Adresse des PCs
 NetAddress myRemoteLocation;
-String remoteIP = "192.168.2.103";
+String remoteIP = "141.83.181.83";
 
 //Initialisierung der Smartphone Sensoren und der Vibrationsfunktion
 KetaiSensor sensor;
 CompassManager compass;
-<<<<<<< HEAD
-=======
-KetaiVibrate vibe;
-String remoteIP = "192.168.2.103";
->>>>>>> 5212cef32988e09ec9dc9adf8131c64d7924b04f
+
 PVector accelerometer;
 KetaiVibrate vibe;
 
@@ -40,6 +36,9 @@ boolean started = false;
 
 // wird bei reset einmal auf true gesetzt
 boolean reset = false;
+
+//wird beim Wechsel auf in der Hand-Nutzung auf false gesetzt
+public static boolean pocket = true;
 
 //Array mit den Bildern der Aufgaben
 PImage[] img = new PImage[3];
@@ -136,8 +135,12 @@ void mousePressed() {
       if (theOscMessage.checkAddrPattern("/calibrate")==true) {
         calibrate();
       }
+      
+    if (theOscMessage.checkAddrPattern("/pocket")==true) {
+    pocket = theOscMessage.get(0).booleanValue();
+    return;
     }
-
+    }
 
 /*Funktion zum Kalibrieren (einnorden): Da der Norden der Karte nicht immer mit dem realen Norden bereinstimmt,
 muss die App vor benutzung zunächst kalibriert werden. Dazu muss sich der Nutzer auf der Karte nach Norden ausrichten.
@@ -172,8 +175,9 @@ void onAccelerometerEvent(float x, float y, float z) {
 //benachrichtigt den Server, wenn ein Schritt erkannt wird
 void sendAcc(){
   if(this.started){
-    OscMessage myMessage = new OscMessage("/accelerometerY");
+    OscMessage myMessage = new OscMessage("/accelerometer");
     myMessage.add(accelerometerY);
+    myMessage.add(accelerometerZ);
     oscP5.send(myMessage, myRemoteLocation); 
     println("android acc, sending to "+myRemoteLocation);
   } 
