@@ -41,7 +41,7 @@ int[][] taskPos = {{-3250, -4000, -1200, -1800},
   //nicht erreichbare Koordinaten, wenn Aufgaben beendet sind
 
   {100, 100, 100, 100}};
-PImage  img, title, rose, btn1, btn2, btn3, start, btnKaliTrue, btnKaliFalse, btnEinblenden, btnAufgabeStart, Aufgabe;
+PImage  img, title, rose, btn1, btn2, btn3, start, btnKaliTrue, btnKaliFalse, btnEinblenden, btnAufgabeStart, Aufgabe, radiobtnOn, radiobtnOff;
 
 int      btnKaliX=200, 
   btn1X = 360, 
@@ -52,7 +52,11 @@ int      btnKaliX=200,
   btnEinblendenX=70, 
   bildAufgabeX=1775, 
   AufgabeStarten=0, // Welche Aufgabe ist gerade aktiv
-  ersterTimer;
+  ersterTimer,
+  radiobtn1X=100,
+  radiobtn1Y=100,
+  radiobtn2Y=150;
+  
 int     btn1Width = 150, 
   btn1Height = 30;
 color   btn1Color = color (255), 
@@ -63,11 +67,15 @@ boolean btn1Over = false,
   btn3Over = false, 
   btnStartOver=false, 
   btnKaliOver=false, 
+  radiobtn1Over=false,
+  radiobtn2Over=false,
   btnAufgabeStartOver=false, 
   imageIsLoaded = false, 
   btnEinblendenOver=false, 
   Ausblenden=false, 
-  firstStart=true;
+  firstStart=true,
+  radiobtn1=true,
+  radiobtn2=false;
 
 void setup() {
   accelerometerY = 9.81;
@@ -83,6 +91,9 @@ void setup() {
   btnEinblenden=loadImage("EinblendenBtn2.png");
   //Aufgabe=loadImage("brandenburg.PNG");
   Aufgabe=loadImage("Aufgabe1.png");
+  radiobtnOff=loadImage("radiobtnOff.png");
+  radiobtnOn=loadImage("radiobtnOn.png");
+  
   //Legt Größe fest
   size(displayWidth, displayHeight, P3D);
   frameRate(60);
@@ -107,6 +118,21 @@ void draw() {
   image(btn3, btn3X, btn1Y, btn1Width, btn1Height);
   // image(btnEinblenden, btnEinblendenX, btn1Y, btn1Width, btn1Height);
   image(title, 0, -180, width, height);
+  
+  if(radiobtn1){
+image(radiobtnOn, radiobtn1X,radiobtn1Y, 50,50);
+image(radiobtnOff, radiobtn1X,radiobtn2Y, 50,50);
+  textSize(20);
+      text("Auswahl 1", radiobtn1X+50, radiobtn1Y+10);
+      fill(255);
+        textSize(20);
+      text("Auswahl 2", radiobtn1X+50, radiobtn2Y+10);
+      fill(255);
+  }
+  if(radiobtn2){
+image(radiobtnOff, radiobtn1X,radiobtn1Y, 50,50);
+image(radiobtnOn, radiobtn1X,radiobtn2Y, 50,50);
+  }
 
 
   if (imageIsLoaded) {
@@ -260,6 +286,14 @@ void mousePressed() {
   if (btnAufgabeStartOver) {
     AufgabeStarten=1;
   }
+    if (radiobtn1Over) {
+    radiobtn1=true;
+    radiobtn2=false;
+  }
+     if (radiobtn2Over) {
+    radiobtn2=true;
+    radiobtn1=false;
+  }
 
 
   /* send a message to client on mouse (touch) click */
@@ -336,6 +370,18 @@ void update (int x, int y) {
     btnAufgabeStartOver=true;
   } else {
     btnAufgabeStartOver  = false;
+  }
+  
+  if (overBtn1(radiobtn1X, radiobtn1Y, 50, 50)) {
+    radiobtn1Over=true;
+  } else {
+    radiobtn1Over  = false;
+  }
+  
+  if (overBtn1(radiobtn1X, radiobtn2Y, 50, 50)) {
+    radiobtn2Over=true;
+  } else {
+    radiobtn2Over  = false;
   }
 }
 //Funktion zur Prüfung ob Zeiger auf Button war
