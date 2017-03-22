@@ -4,17 +4,20 @@ import oscP5.*;
 import netP5.*;
 
 //Initialisieren der OSCP5 Library
-OscP5 oscP5;
-//Setzen der IP-Adresse des Smartphones
-NetAddress myRemoteLocation;
-String remoteIP = "141.83.181.62";
 
+OscP5 oscP5;
+NetAddress myRemoteLocation;
+//Setzen der IP-Adresse des Smartphones
+
+String remoteIP = "192.168.2.101";
 //Walking = Bewegung vorerst gestoppt
-boolean walking = false;
-//        dir = false;    zur Vermeidung von "Sliding in Place"
+
+boolean walking = false, 
+  //        dir = false;    zur Vermeidung von "Sliding in Place"
 
 /*Y-Achse des Beschleunigungssensor, Ausrichtung des Handys, 
-Ausrichtung in Bogenmaß, Ausrichtung in Grad, X- und Y-Position der Karte */
+ Ausrichtung in Bogenmaß, Ausrichtung in Grad, X- und Y-Position der Karte */
+  dir = false;
 float   accelerometerY, 
   direction, 
   rad, 
@@ -23,30 +26,33 @@ float   accelerometerY,
   stepsY = 0;
 
 /* Gehgeschwindigkeit, Schrittzähler, Skalierung der Karte, Breite der Anzeige, Höhe der Anzeige,
-aktuelle Aufgabe */
-int  velocity = 10,
-  steps = 0,
+ aktuelle Aufgabe */
+int  
+  velocity = 10, 
+  steps = 0, 
   scale = 6, 
   width1=600, 
   height1=800, 
   task = 0;
-
 //Zielkoordinaten der Aufgaben
+
 int[][] taskPos = {{-3250, -4000, -1200, -1800}, 
   {-2900, -3600, -2500, -3000}, 
   //nicht erreichbare Koordinaten, wenn Aufgaben beendet sind
+
   {100, 100, 100, 100}};
+PImage  img, title, rose, btn1, btn2, btn3, start, btnKaliTrue, btnKaliFalse, btnEinblenden, btnAufgabeStart, Aufgabe;
 
-PImage  img, title, rose, btn1, btn2, btn3,start,btnKaliTrue,btnKaliFalse,btnEinblenden;
-
-int      btnKaliX=200,
+int      btnKaliX=200, 
   btn1X = 360, 
   btn1Y = 0, 
   btn2X =520, 
-  btn3X = 680,
-  //btnStartX = 640,
- 
-  btnEinblendenX=70;
+  btn3X = 680, 
+  btnAufgabeStartX = 1080, 
+  btnEinblendenX=70, 
+  bildAufgabeX=1775, 
+  AufgabeStarten=0, // Welche Aufgabe ist gerade aktiv
+  ersterTimer;
 int     btn1Width = 150, 
   btn1Height = 30;
 color   btn1Color = color (255), 
@@ -55,11 +61,13 @@ color   btn1Color = color (255),
 boolean btn1Over = false, 
   btn2Over = false, 
   btn3Over = false, 
-  btnStartOver=false,
-  btnKaliOver=false,
-  imageIsLoaded = false,
-  btnEinblendenOver=false,
-  Ausblenden=false;
+  btnStartOver=false, 
+  btnKaliOver=false, 
+  btnAufgabeStartOver=false, 
+  imageIsLoaded = false, 
+  btnEinblendenOver=false, 
+  Ausblenden=false, 
+  firstStart=true;
 
 void setup() {
   accelerometerY = 9.81;
@@ -71,8 +79,10 @@ void setup() {
   btn3= loadImage("btn4.png");
   btnKaliTrue=loadImage("btnKaliTrue.png");
   btnKaliFalse=loadImage("btnKaliFalse.png");
- //start = loadImage("startBtn.png");
+  btnAufgabeStart = loadImage("btnAufgabe.png");
   btnEinblenden=loadImage("EinblendenBtn2.png");
+  //Aufgabe=loadImage("brandenburg.PNG");
+  Aufgabe=loadImage("Aufgabe1.png");
   //Legt Größe fest
   size(displayWidth, displayHeight, P3D);
   frameRate(60);
@@ -95,27 +105,44 @@ void draw() {
   image(btn1, btn1X, btn1Y, btn1Width, btn1Height);
   image(btn2, btn2X, btn1Y, btn1Width, btn1Height);
   image(btn3, btn3X, btn1Y, btn1Width, btn1Height);
- // image(btnEinblenden, btnEinblendenX, btn1Y, btn1Width, btn1Height);
+  // image(btnEinblenden, btnEinblendenX, btn1Y, btn1Width, btn1Height);
   image(title, 0, -180, width, height);
-
 
 
   if (imageIsLoaded) {
     /*map position on screen*/
     //Lädt die Karte, Kompassrose und Buttons
-   
+
     image(img, stepsX, stepsY, width*scale, height*scale);
     image(rose, 0, 0, 100, 100);
-    if(!Ausblenden){
-    image(btn1, btn1X, btn1Y, btn1Width, btn1Height);
-    image(btn2, btn2X, btn1Y, btn1Width, btn1Height);
-    image(btn3, btn3X, btn1Y, btn1Width, btn1Height);
-    image(btnKaliFalse,btnKaliX,btn1Y, btn1Width, btn1Height);
+    if (!Ausblenden) {
+      image(btn1, btn1X, btn1Y, btn1Width, btn1Height);
+      image(btn2, btn2X, btn1Y, btn1Width, btn1Height);
+      image(btn3, btn3X, btn1Y, btn1Width, btn1Height);
+      image(btnKaliFalse, btnKaliX, btn1Y, btn1Width, btn1Height);
+      image(btnAufgabeStart, btnAufgabeStartX, btn1Y, btn1Width, btn1Height);
+
+
+    if (millis()<ersterTimer && firstStart) {
+      textSize(40);
+      text("Drücke oben links um das Gerät zu kalibrieren", 1500, 500);
+      fill(255);
+    }else firstStart =false;
+
+      if (AufgabeStarten==1) {
+        image(Aufgabe, bildAufgabeX, 910, 150, 150);
+        //  displayAufgabeText();
+      }
+       if (AufgabeStarten==1 && task ==1) {
+         Aufgabe=loadImage("pisa.PNG");
+        image(Aufgabe, bildAufgabeX, 910, 150, 150);
+        //  displayAufgabeText();
+      }
     }
 
     image(btnEinblenden, btnEinblendenX, btn1Y, btn1Width, btn1Height);
-   //  image(start,btnStartX, btn1Y, btn1Width, btn1Height); //Btn Start
-  
+    //  image(start,btnStartX, btn1Y, btn1Width, btn1Height); //Btn Start
+
     stepper();
     checkPos();
     displayText();
@@ -133,6 +160,7 @@ void draw() {
       "velocity: " + nfp(velocity, 1, 2) + "\n" +
       "StepsY: " + nfp(stepsY, 1, 2), 0, 0, width, height);
   }
+ 
 }
 
 void checkPos() {
@@ -147,8 +175,8 @@ void checkPos() {
 
 void calibrate() {
   OscMessage myMessage = new OscMessage("/calibrate");
-    myMessage.add("sendingPosition");
-    oscP5.send(myMessage, myRemoteLocation);
+  myMessage.add("sendingPosition");
+  oscP5.send(myMessage, myRemoteLocation);
 }
 
 void stepper() { 
@@ -158,8 +186,7 @@ void stepper() {
   /*translate radiant to degree */
   degree = (360/(2*PI))*rad;
 
-  distVert = 10;
-  distDiag = 10;
+
 
   //Boundaries
   if (stepsX>0) stepsX=0;
@@ -168,38 +195,37 @@ void stepper() {
   if (stepsY < -height*(scale-1)) stepsY=-height*(scale-1);
 
 
-/* beschleunigung x achse
-  if (accelerometerZ >= -0.5 && steps < 15 && steps >= -15 && walking) {
-    steps++;
-    if(dir){
-     steps = 0;
-     dir = false;
-    } 
-    //velocity = 10*Math.abs((int) (accelerometerZ + 1.25));
-    velocity = 10;
-    stepsX = stepsX+(cos(rad)*velocity);
-    stepsY = stepsY-(sin(rad)*velocity);
-  }
-  
-  if (accelerometerZ <= -2.5 && steps <= 15 && steps > -15 && walking) {
-    steps = steps - 1;
-    if(!dir){
-     steps = 0;
-     dir = true;
-    } 
-    //velocity = 10*Math.abs((int) (accelerometerZ + 1.25));
-    velocity = 10;
-    stepsX = stepsX+(cos(rad)*velocity);
-    stepsY = stepsY-(sin(rad)*velocity);
-  }
-*/
-  
-  if ((accelerometerY <= -11.81 || (accelerometerY >= -7.81 && accelerometerY <= 7.81) || 
-        accelerometerY >= 11.81) && walking){
-       stepsX = stepsX+(cos(rad)*velocity);
-       stepsY = stepsY-(sin(rad)*velocity);
-       }
+  /* beschleunigung x achse
+   if (accelerometerZ >= -0.5 && steps < 15 && steps >= -15 && walking) {
+   steps++;
+   if(dir){
+   steps = 0;
+   dir = false;
+   } 
+   //velocity = 10*Math.abs((int) (accelerometerZ + 1.25));
+   velocity = 10;
+   stepsX = stepsX+(cos(rad)*velocity);
+   stepsY = stepsY-(sin(rad)*velocity);
+   }
+   
+   if (accelerometerZ <= -2.5 && steps <= 15 && steps > -15 && walking) {
+   steps = steps - 1;
+   if(!dir){
+   steps = 0;
+   dir = true;
+   } 
+   //velocity = 10*Math.abs((int) (accelerometerZ + 1.25));
+   velocity = 10;
+   stepsX = stepsX+(cos(rad)*velocity);
+   stepsY = stepsY-(sin(rad)*velocity);
+   }
+   */
 
+  if ((accelerometerY <= -11.81 || (accelerometerY >= -7.81 && accelerometerY <= 7.81) || 
+    accelerometerY >= 11.81) && walking) {
+    stepsX = stepsX+(cos(rad)*velocity);
+    stepsY = stepsY-(sin(rad)*velocity);
+  }
 } 
 
 
@@ -208,6 +234,7 @@ void mousePressed() {
   if (btn1Over) {
     img=loadImage("europeMap.gif");
     imageIsLoaded = true;
+      ersterTimer=millis()+3000;
   }
   //Button 2 wird gedrückt
   if (btn2Over) {
@@ -219,17 +246,21 @@ void mousePressed() {
     img=loadImage("800px-BRD.png");
     imageIsLoaded = true;
   } 
-    if (btnKaliOver) {
-   calibrate();
-      btnKaliFalse=btnKaliTrue;
+  if (btnKaliOver) {
+    calibrate();
+    btnKaliFalse=btnKaliTrue;
   }
-    if (btnEinblendenOver) {
-   Ausblenden=!Ausblenden;
-if(Ausblenden){
-  btnEinblenden=loadImage("EinblendenBtn.png");
-}else btnEinblenden=loadImage("EinblendenBtn2.png");
+  if (btnEinblendenOver) {
+    Ausblenden=!Ausblenden;
+    if (Ausblenden) {
+      btnEinblenden=loadImage("EinblendenBtn.png");
+    } else btnEinblenden=loadImage("EinblendenBtn2.png");
   } 
-  
+
+  if (btnAufgabeStartOver) {
+    AufgabeStarten=1;
+  }
+
 
   /* send a message to client on mouse (touch) click */
   // OscMessage myMessage = new OscMessage("/test");
@@ -286,20 +317,25 @@ void update (int x, int y) {
   }
   /*
    if ( overBtn1(btnStartX, btn1Y, btn1Width+70, btn1Height+100)) {
-    btnStartOver = true;
-  } else {
-    btnStartOver = false;
-  }*/
-  
-    if (overBtn1(btnKaliX, btn1Y, btn1Width, btn1Height)) {
+   btnStartOver = true;
+   } else {
+   btnStartOver = false;
+   }*/
+
+  if (overBtn1(btnKaliX, btn1Y, btn1Width, btn1Height)) {
     btnKaliOver = true;
   } else {
     btnKaliOver = false;
   }
-      if (overBtn1(btnEinblendenX, btn1Y, btn1Width, btn1Height)) {
+  if (overBtn1(btnEinblendenX, btn1Y, btn1Width, btn1Height)) {
     btnEinblendenOver = true;
   } else {
-       btnEinblendenOver  = false;
+    btnEinblendenOver  = false;
+  }
+  if (overBtn1(btnAufgabeStartX, btn1Y, btn1Width, btn1Height)) {
+    btnAufgabeStartOver=true;
+  } else {
+    btnAufgabeStartOver  = false;
   }
 }
 //Funktion zur Prüfung ob Zeiger auf Button war
@@ -327,3 +363,24 @@ void displayText() {
   textAlign(RIGHT);
   text("Osten", displayWidth, displayHeight/2);
 }
+
+/*void displayAufgabeText(){
+ textSize(50);
+ 
+ //textAlign(RIGHT, BOTTOM);
+ text("Finde das Brandenburger Tor",bildAufgabeX , 890);
+ fill(255);
+ }*/
+ /*
+void firstStart() {
+  if (firstStart) {
+    ersterTimer=millis()+3000;
+    while (millis()<ersterTimer) {
+      textSize(50);
+      text("Kalibriere asdasdasdadad", 1000, 500);
+      fill(255);
+    }
+    firstStart=false;
+  }
+}
+*/

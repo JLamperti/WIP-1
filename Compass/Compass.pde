@@ -10,11 +10,16 @@ OscP5 oscP5;
 
 //Setzen der IP-Adresse des PCs
 NetAddress myRemoteLocation;
-String remoteIP = "141.83.181.71";
+String remoteIP = "192.168.2.103";
 
 //Initialisierung der Smartphone Sensoren und der Vibrationsfunktion
 KetaiSensor sensor;
 CompassManager compass;
+<<<<<<< HEAD
+=======
+KetaiVibrate vibe;
+String remoteIP = "192.168.2.103";
+>>>>>>> 5212cef32988e09ec9dc9adf8131c64d7924b04f
 PVector accelerometer;
 KetaiVibrate vibe;
 
