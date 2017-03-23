@@ -81,7 +81,8 @@ boolean btn1Over = false,
   Ausblenden=false, 
   firstStart=true,
   radiobtn1=true,
-  radiobtn2=false;
+  radiobtn2=false,
+  kali=false;    
   //Hauptmenü=true;
 
 void setup() {
@@ -133,23 +134,25 @@ void draw() {
   image(title, 0, -180, width, height);
   
   if(radiobtn1){
+       textAlign(LEFT);
       image(radiobtnOn, radiobtn1X,radiobtn1Y, 50,50);
       image(radiobtnOff, radiobtn1X,radiobtn2Y, 50,50);
       textSize(20);
       fill(0);
-      text("Smartphone in der Tasche", radiobtn1X+50, radiobtn1Y+10);
+      text("Smartphone in der Tasche", radiobtn1X+50, radiobtn1Y+20);
       textSize(20);
       fill(0);
-      text("Smartphone in der Hand", radiobtn1X+50, radiobtn2Y+10);
+      text("Smartphone in der Hand", radiobtn1X+50, radiobtn2Y+20);
   }
   if(radiobtn2){
+      textAlign(LEFT);
       image(radiobtnOff, radiobtn1X,radiobtn1Y, 50,50);
       image(radiobtnOn, radiobtn1X,radiobtn2Y, 50,50);
        fill(0);
-      text("Smartphone in der Tasche", radiobtn1X+50, radiobtn1Y+10);
+      text("Smartphone in der Tasche", radiobtn1X+50, radiobtn1Y+20);
       textSize(20);
       fill(0);
-      text("Smartphone in der Hand", radiobtn1X+50, radiobtn2Y+10);
+      text("Smartphone in der Hand", radiobtn1X+50, radiobtn2Y+20);
   }
 
 
@@ -305,8 +308,19 @@ void mousePressed() {
     imageIsLoaded = true;
   } 
   if (btnKaliOver) {
-    calibrate();
-    btnKaliFalse=btnKaliTrue;
+
+   if(!kali) {
+     calibrate();
+     btnKaliFalse=btnKaliTrue;
+     kali=!kali;
+   }
+   
+   else {
+     btnKaliFalse=loadImage("btnKaliFalse.png");
+     kali=false;
+   }
+
+   
   }
   if (btnEinblendenOver) {
     Ausblenden=!Ausblenden;
@@ -337,6 +351,10 @@ void mousePressed() {
     imageIsLoaded=false;
     img=loadImage("Hintergrund_menue.png");
     walking=false;
+    firstStart=true;
+    Ausblenden=false;
+     btnKaliFalse=loadImage("btnKaliFalse.png");
+     kali=false;
   }
 
 
@@ -459,6 +477,7 @@ void displayText() {
   fill(0, 102, 153, 51);
   textAlign(RIGHT);
   text("Osten", displayWidth, displayHeight/2);
+  textAlign(CENTER);
 }
 
 /*void displayAufgabeText(){
