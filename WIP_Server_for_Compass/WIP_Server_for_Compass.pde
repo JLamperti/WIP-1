@@ -9,7 +9,7 @@ OscP5 oscP5;
 NetAddress myRemoteLocation;
 
 //Setzen der IP-Adresse des Smartphones
-String remoteIP = "141.83.181.72";
+String remoteIP = "141.83.180.211";
 
 //Walking = Bewegung vorerst gestoppt
 boolean walking = false, 
@@ -173,6 +173,7 @@ void draw() {
 
     if (millis()<ersterTimer && firstStart) {
       textSize(40);
+      textAlign(CENTER, CENTER);
       text("Drücke oben links um das Gerät zu kalibrieren", 1000, 500);
       fill(255);
     }else firstStart =false;
@@ -464,9 +465,9 @@ boolean overBtn1(int x, int y, int width, int height) {
 }
 // Sensordaten Anzeige 
 void displayText() {
-  textSize(40);
-  fill(0, 102, 153, 51);
-  textAlign(CENTER, TOP);
+  /* textSize(40);
+  fill(10);
+  textAlign(CENTER, height1/10);
   text("Norden", displayWidth/2, 0);
   fill(0, 102, 153, 51);
   textAlign(CENTER, BOTTOM);
@@ -477,16 +478,17 @@ void displayText() {
   fill(0, 102, 153, 51);
   textAlign(RIGHT);
   text("Osten", displayWidth, displayHeight/2);
-  textAlign(CENTER);
+  textAlign(CENTER); */
 }
 
-/*void displayAufgabeText(){
+void displayAufgabeText(){
  textSize(50);
  
  //textAlign(RIGHT, BOTTOM);
+  textAlign(CENTER);
  text("Finde das Brandenburger Tor",bildAufgabeX , 890);
  fill(255);
- }*/
+ }
  /*
 void firstStart() {
   if (firstStart) {

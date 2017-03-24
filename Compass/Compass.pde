@@ -10,7 +10,7 @@ OscP5 oscP5;
 
 //Setzen der IP-Adresse des PCs
 NetAddress myRemoteLocation;
-String remoteIP = "141.83.181.83";
+String remoteIP = "141.83.180.209";
 
 //Initialisierung der Smartphone Sensoren und der Vibrationsfunktion
 KetaiSensor sensor;
@@ -221,23 +221,23 @@ void sendAcc(){
   if(started){
     fill(255,0,0);
     textSize(100);
-    text("STOP", width/2, height/4);
+    text("STOPPEN", width/2, height/4);
   }
   else if(calibrated){
     fill(0,255,0);
     textSize(100);
-     text("START", width/2, height/4  );
+     text("STARTEN", width/2, height/4  );
   }
   else{
     fill(0,255,0);
     textSize(75);
-     text("CALIBRATE TO START", width/2, height/4  );
+     text("KALIBRIEREN ZUM STARTEN", width/2, height/4  );
   }
   
   //Der untere text lautet immer RESET
     fill(255);
     textSize(100);
-    text("RESET", width/2, (height - height/4)  );
+    text("ZURÜCKSETZEN", width/2, (height - height/4)  );
     this.reset = false;
   
   popStyle();
