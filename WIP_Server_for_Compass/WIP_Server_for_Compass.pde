@@ -44,7 +44,7 @@ int[][] taskPos = {{-3250, -4000, -1200, -1800},
   //nicht erreichbare Koordinaten, wenn Aufgaben beendet sind
 
   {100, 100, 100, 100}};
-PImage  img, title, rose, btn1, btn2, btn3, start, btnKaliTrue, btnKaliFalse, btnEinblenden, btnAufgabeStart, Aufgabe, radiobtnOn, radiobtnOff,button_hauptmenue,hintergrundmenue;
+PImage  img, title, rose, btn1, btn2, btn3, start, btnKaliTrue, btnKaliFalse, btnEinblenden, btnAufgabeStart, Aufgabe, radiobtnOn, radiobtnOff,button_hauptmenue,hintergrundmenue, kaliHin;
 
 int      btnKaliX=200, 
   btn1X = 360, 
@@ -104,6 +104,7 @@ void setup() {
   button_hauptmenue=loadImage("button_hauptmenue.png");
   hintergrundmenue=loadImage("Hintergrund_menue.png");
   img=loadImage("Hintergrund_menue.png");
+  kaliHin=loadImage("Richtung_kali.png");
   //Legt Größe fest
   size(displayWidth, displayHeight, P3D);
   frameRate(60);
@@ -169,14 +170,16 @@ void draw() {
       image(btnKaliFalse, btnKaliX, btn1Y, btn1Width, btn1Height);
       image(btnAufgabeStart, btnAufgabeStartX, btn1Y, btn1Width, btn1Height);
       image(button_hauptmenue, button_hauptmenueX, btn1Y, btn1Width, btn1Height);
+ if(!kali){
+   image(kaliHin,600,300,800,600);
+ }
 
-
-    if (millis()<ersterTimer && firstStart) {
+  /*  if (millis()<ersterTimer && firstStart) {
       textSize(40);
       textAlign(CENTER, CENTER);
       text("Drücke oben links um das Gerät zu kalibrieren", 1000, 500);
       fill(255);
-    }else firstStart =false;
+    }else firstStart =false;*/
 
       if (AufgabeStarten==1) {
         image(Aufgabe, bildAufgabeX, 910, 150, 150);
