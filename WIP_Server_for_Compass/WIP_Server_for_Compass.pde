@@ -46,24 +46,24 @@ int[][] taskPos = {{-3250, -4000, -1200, -1800},
   {100, 100, 100, 100}};
 PImage  img, title, rose, btn1, btn2, btn3, start, btnKaliTrue, btnKaliFalse, btnEinblenden, btnAufgabeStart, Aufgabe, radiobtnOn, radiobtnOff,button_hauptmenue,hintergrundmenue, kaliHin;
 
-int      btnKaliX=200, 
+int    btn1Width = 150, 
+  btn1Height = 30,
+  btnKaliX=200, 
   btn1X = 360, 
   btn1Y = 0, 
   btn2X =520, 
   btn3X = 680, 
-  btnAufgabeStartX = 1060,
-  button_hauptmenueX=1200,
+  button_hauptmenueX=1000,
+  btnAufgabeStartX = button_hauptmenueX-btn1Width-10,
   btnEinblendenX=70, 
-  bildAufgabeX=1775, 
+  bildAufgabeX=50, 
+  bildAufgabeY=120,
   AufgabeStarten=0, // Welche Aufgabe ist gerade aktiv
   ersterTimer,
   radiobtn1X=100,
   radiobtn1Y=600,
   radiobtn2Y=650;
 
-  
-int     btn1Width = 150, 
-  btn1Height = 30;
 color   btn1Color = color (255), 
   btn1Highlight = color (200), 
   bckColor = color(255);
@@ -171,7 +171,7 @@ void draw() {
       image(btnAufgabeStart, btnAufgabeStartX, btn1Y, btn1Width, btn1Height);
       image(button_hauptmenue, button_hauptmenueX, btn1Y, btn1Width, btn1Height);
  if(!kali){
-   image(kaliHin,600,300,800,600);
+   image(kaliHin,width/2-400,height/2-300,800,600);
  }
 
   /*  if (millis()<ersterTimer && firstStart) {
@@ -182,13 +182,18 @@ void draw() {
     }else firstStart =false;*/
 
       if (AufgabeStarten==1) {
-        image(Aufgabe, bildAufgabeX, 910, 150, 150);
-        //  displayAufgabeText();
+        image(Aufgabe, bildAufgabeX, bildAufgabeY, 150, 150);
+        //displayAufgabeText();
       }
        if (AufgabeStarten==1 && task ==1) {
          Aufgabe=loadImage("pisa.PNG");
-        image(Aufgabe, bildAufgabeX, 910, 150, 150);
-        //  displayAufgabeText();
+        image(Aufgabe, bildAufgabeX, bildAufgabeY, 150, 150);
+        //displayAufgabeText();
+      }
+       if (AufgabeStarten==1 && task ==2) {
+         Aufgabe=loadImage("smile.png");
+        image(Aufgabe, bildAufgabeX, bildAufgabeY, 150, 150);
+        //displayAufgabeText();
       }
     }
 
