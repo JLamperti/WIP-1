@@ -5,7 +5,7 @@
 	
 Über WIP
 ========
-WIP ermöglicht Kindern eine aufregende neuartige Navigation über geographische Karten. Die Schüler müssen lediglich auf der Stelle Schrittbewegungen in eine bestimmte Richtung vornehmen um so beispielsweise eine Europa- oder Deutschlandkarte zu erkunden. Des weiteren können in Europa einige Navigationsaufgaben absolviert werden, die das Wissen über bestimmte Sehenswürdigkeiten abfragen.
+WIP ermöglicht Kindern eine aufregende neuartige Navigation über geographische Karten. Die Schüler müssen lediglich Schrittbewegungen (möglichst ohne Vorwärtsbewegung) in eine bestimmte Richtung vornehmen, um so beispielsweise eine Europa- oder Deutschlandkarte zu erkunden. Des weiteren können in Europa einige Navigationsaufgaben absolviert werden, die das Wissen über bestimmte Sehenswürdigkeiten abfragen.
 
 
 Für WIP benötigt
@@ -57,8 +57,8 @@ Die Anwendung nutzen
 Entwickelt von
 ==============
 Björn Filter
-Marcus Muttersbach
 Jonas Lamperti
+Marcus Muttersbach
 Arne Schrade
 Steffen Wolter
 
