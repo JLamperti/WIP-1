@@ -4,7 +4,6 @@ import oscP5.*;
 import netP5.*;
 
 //Initialisieren der OSCP5 Library
-
 OscP5 oscP5;
 NetAddress myRemoteLocation;
 
@@ -12,12 +11,9 @@ NetAddress myRemoteLocation;
 String remoteIP = "141.83.180.211";
 
 //Walking = Bewegung vorerst gestoppt
-boolean walking = false, 
+boolean walking = false; 
   //        dir = false;    zur Vermeidung von "Sliding in Place"
 
-/*Y-Achse des Beschleunigungssensor, Ausrichtung des Handys, 
- Ausrichtung in Bogenmaß, Ausrichtung in Grad, X- und Y-Position der Karte */
-  dir = false;
   
   /* Gehgeschwindigkeit, Schrittzähler, Skalierung der Karte, Breite der Anzeige, Höhe der Anzeige,
  aktuelle Aufgabe */
@@ -28,7 +24,10 @@ int
   width1=600, 
   height1=800, 
   task = 0;
-  
+ 
+ 
+/*Y-Achse des Beschleunigungssensor, Z-Achse des Beschleunigungssensor, Ausrichtung des Handys, 
+ Ausrichtung in Bogenmaß, Ausrichtung in Grad, X- und Y-Position der Karte */
 float   accelerometerY,
   accelerometerZ,
   direction, 
@@ -38,16 +37,24 @@ float   accelerometerY,
   stepsY = -(height1*(scale/2));
 
 //Zielkoordinaten der Aufgaben
-
 int[][] taskPos = {{-3250, -4000, -1200, -1800}, 
   {-2900, -3600, -2500, -3000}, 
   //nicht erreichbare Koordinaten, wenn Aufgaben beendet sind
-
   {100, 100, 100, 100}};
-PImage  img, title, rose, btn1, btn2, btn3, start, btnKaliTrue, btnKaliFalse, btnEinblenden, btnAufgabeStart, Aufgabe, radiobtnOn, radiobtnOff,button_hauptmenue,hintergrundmenue, kaliHin;
+ 
+ //Definieren der benötigten Bilder:
+ //Hauptmenü-Grafik, Kompassrose, Buttons des Hauptmenüs, Kalibrieren-Buttons
+PImage  title, rose, btn1, btn2, btn3, btnKaliTrue, btnKaliFalse,
+        //Aufgabenstart-Button, Aufgabenanzeige, Auswahl-Buttons für Steuerungsmodi
+        btnEinblenden, btnAufgabeStart, Aufgabe, radiobtnOn, radiobtnOff,
+        //Zurück zum Hauptmenü, weißer Hintergrund, Kalibrieren-Hinweis
+        button_hauptmenue,hintergrundmenue, kaliHin;
 
+//Definieren der Größe der Buttons
 int    btn1Width = 150, 
   btn1Height = 30,
+  
+  //Setzen der Position der Buttons
   btnKaliX=200, 
   btn1X = 360, 
   btn1Y = 0, 
@@ -58,15 +65,18 @@ int    btn1Width = 150,
   btnEinblendenX=70, 
   bildAufgabeX=50, 
   bildAufgabeY=120,
-  AufgabeStarten=0, // Welche Aufgabe ist gerade aktiv
-  ersterTimer,
   radiobtn1X=100,
   radiobtn1Y=600,
-  radiobtn2Y=650;
+  radiobtn2Y=650,
+  
+//Welche Aufgabe ist gerade aktiv
+  AufgabeStarten=0,
+  ersterTimer;
 
-color   btn1Color = color (255), 
-  btn1Highlight = color (200), 
-  bckColor = color(255);
+//Setzen eines weißes Hintergrunds
+color  bckColor = color(255);
+
+//Standardeinstellungen für Buttons
 boolean btn1Over = false, 
   btn2Over = false, 
   btn3Over = false, 
@@ -88,6 +98,7 @@ boolean btn1Over = false,
 void setup() {
   accelerometerY = 9.81;
   background(bckColor);
+  //Bilder mit PNG-Dateien verknüpfen
   title = loadImage("title.png");
   rose =loadImage("Kompassrose-no.png");
   btn1 = loadImage("btn1.png");
@@ -97,13 +108,11 @@ void setup() {
   btnKaliFalse=loadImage("btnKaliFalse.png");
   btnAufgabeStart = loadImage("btnAufgabe.png");
   btnEinblenden=loadImage("EinblendenBtn2.png");
-  //Aufgabe=loadImage("brandenburg.PNG");
   Aufgabe=loadImage("Aufgabe1.png");
   radiobtnOff=loadImage("radiobtnOff.png");
   radiobtnOn=loadImage("radiobtnOn.png");
   button_hauptmenue=loadImage("button_hauptmenue.png");
   hintergrundmenue=loadImage("Hintergrund_menue.png");
-  img=loadImage("Hintergrund_menue.png");
   kaliHin=loadImage("Richtung_kali.png");
   //Legt Größe fest
   size(displayWidth, displayHeight, P3D);
@@ -112,7 +121,7 @@ void setup() {
   textSize(18);
   fill(50);
 
-  /* start oscP5, listening for incoming messages on port 12000 */
+  // start oscP5, listening for incoming messages on port 12000 */
   oscP5 = new OscP5(this, 12000);
 
   /* send to phone address, not needed yet */
@@ -125,15 +134,14 @@ void draw() {
   
   fill(255);
   //Lädt Buttons
-    image(img, stepsX, stepsY, width*scale, height*scale);
+  image(hintergrundmenue, stepsX, stepsY, width*scale, height*scale);
   image(btn1, btn1X, btn1Y, btn1Width, btn1Height);
-
-
   image(btn2, btn2X, btn1Y, btn1Width, btn1Height);
   image(btn3, btn3X, btn1Y, btn1Width, btn1Height);
-  // image(btnEinblenden, btnEinblendenX, btn1Y, btn1Width, btn1Height);
+  //image(btnEinblenden, btnEinblendenX, btn1Y, btn1Width, btn1Height);
   image(title, 0, -180, width, height);
   
+  //Einrichten der Radiobuttons
   if(radiobtn1){
        textAlign(LEFT);
       image(radiobtnOn, radiobtn1X,radiobtn1Y, 50,50);
@@ -158,11 +166,11 @@ void draw() {
 
 
   if (imageIsLoaded) {
-    /*map position on screen*/
     //Lädt die Karte, Kompassrose und Buttons
-
-    image(img, stepsX, stepsY, width*scale, height*scale);
+    image(hintergrundmenue, stepsX, stepsY, width*scale, height*scale);
     image(rose, 0, 0, 100, 100);
+    
+    //Buttons, die angezeigt werden, solange nicht "Ausblenden" angeklickt wird
     if (!Ausblenden) {
       image(btn1, btn1X, btn1Y, btn1Width, btn1Height);
       image(btn2, btn2X, btn1Y, btn1Width, btn1Height);
@@ -170,41 +178,35 @@ void draw() {
       image(btnKaliFalse, btnKaliX, btn1Y, btn1Width, btn1Height);
       image(btnAufgabeStart, btnAufgabeStartX, btn1Y, btn1Width, btn1Height);
       image(button_hauptmenue, button_hauptmenueX, btn1Y, btn1Width, btn1Height);
- if(!kali){
-   image(kaliHin,width/2-400,height/2-300,800,600);
- }
+      
+      //Anzeigen des erklärenden Hinweises zur Kalibrierung des Smartphones
+      if(!kali){
+      image(kaliHin,width/2-400,height/2-300,800,600);
+   }
 
-  /*  if (millis()<ersterTimer && firstStart) {
-      textSize(40);
-      textAlign(CENTER, CENTER);
-      text("Drücke oben links um das Gerät zu kalibrieren", 1000, 500);
-      fill(255);
-    }else firstStart =false;*/
-
+    //Anzeigen der ersten Aufgabe, wenn "Aufgabe starten" geklickt
       if (AufgabeStarten==1) {
         image(Aufgabe, bildAufgabeX, bildAufgabeY, 150, 150);
-        //displayAufgabeText();
       }
+    //Anzeigen der zweiten Aufgabe
        if (AufgabeStarten==1 && task ==1) {
          Aufgabe=loadImage("pisa.PNG");
         image(Aufgabe, bildAufgabeX, bildAufgabeY, 150, 150);
-        //displayAufgabeText();
       }
+    //Anzeigen des Erfolgssmiley
        if (AufgabeStarten==1 && task ==2) {
          Aufgabe=loadImage("smile.png");
         image(Aufgabe, bildAufgabeX, bildAufgabeY, 150, 150);
-        //displayAufgabeText();
       }
     }
 
     image(btnEinblenden, btnEinblendenX, btn1Y, btn1Width, btn1Height);
-    //  image(start,btnStartX, btn1Y, btn1Width, btn1Height); //Btn Start
 
     stepper();
     checkPos();
     displayText();
 
-    /*displays sensor data on screen*/
+    //Anzeige der Sensorendaten (für Testzwecke)
 /*    text(
       "steps: " + nfp(steps, 1, 2) + "\n" +
       "velocity: " + nfp(velocity, 1, 2) + "\n" +
@@ -223,6 +225,7 @@ void draw() {
  
 }
 
+//Positionsabfrage für Aufgaben
 void checkPos() {
   if (walking && stepsX <= taskPos[task][0] && stepsX > taskPos[task][1] 
     && stepsY <= taskPos[task][2] && stepsY > taskPos[task][3]) {
@@ -233,6 +236,7 @@ void checkPos() {
   }
 }
 
+//Kalibrieren-Methode
 void calibrate() {
   OscMessage myMessage = new OscMessage("/calibrate");
   myMessage.add("sendingPosition");
@@ -241,60 +245,30 @@ void calibrate() {
 
 void stepper() { 
 
-  /* radiant (Bogenmass) calculation */
+  //Bogenmaß berechnen
   rad = 2*PI + direction;
-  /*translate radiant to degree */
+  //Bogenmaß in Grad umrechnen
   degree = (360/(2*PI))*rad;
 
-
-
-  //Boundaries
+  //Begrenzung der Bewegung (nicht außerhalb der Karte) 
   if (stepsX>0) stepsX=0;
   if (stepsY>0) stepsY=0;
   if (stepsX< -width*(scale-1)) stepsX=-width*(scale-1);
   if (stepsY < -height*(scale-1)) stepsY=-height*(scale-1);
 
-
-  /* beschleunigung x achse
-   if (accelerometerZ >= -0.5 && steps < 15 && steps >= -15 && walking) {
-   steps++;
-   if(dir){
-   steps = 0;
-   dir = false;
-   } 
-   //velocity = 10*Math.abs((int) (accelerometerZ + 1.25));
-   velocity = 10;
-   stepsX = stepsX+(cos(rad)*velocity);
-   stepsY = stepsY-(sin(rad)*velocity);
-   }
-   
-   if (accelerometerZ <= -2.5 && steps <= 15 && steps > -15 && walking) {
-   steps = steps - 1;
-   if(!dir){
-   steps = 0;
-   dir = true;
-   } 
-   //velocity = 10*Math.abs((int) (accelerometerZ + 1.25));
-   velocity = 10;
-   stepsX = stepsX+(cos(rad)*velocity);
-   stepsY = stepsY-(sin(rad)*velocity);
-   }
-   */
-
+  //Bewegung in der Tasche
   if ((accelerometerY <= -11.81 || (accelerometerY >= -7.81 && accelerometerY <= 7.81) || 
     accelerometerY >= 11.81) && walking && radiobtn1) {
     stepsX = stepsX+(cos(rad)*velocity);
     stepsY = stepsY-(sin(rad)*velocity);
   }
  
+  //Bewegung in der Hand
   if (accelerometerZ >= 11.81 || accelerometerZ <= 7.81 && walking &&
     radiobtn2){
       velocity = Math.abs((int) accelerometerZ);
        stepsX = stepsX+(cos(rad)*velocity);
        stepsY = stepsY-(sin(rad)*velocity);
-       }
-     else {
-
        }
 } 
 
@@ -302,68 +276,76 @@ void stepper() {
 void mousePressed() {
   //Button 1 wird gedrückt
   if (btn1Over) {
-    img=loadImage("europeMap.gif");
+    hintergrundmenue=loadImage("europeMap.gif");
     imageIsLoaded = true;
       ersterTimer=millis()+3000;
   }
+  
   //Button 2 wird gedrückt
   if (btn2Over) {
-    img=loadImage("worldMap.png");
+    hintergrundmenue=loadImage("worldMap.png");
     imageIsLoaded = true;
   }
+  
   //Button 3 wird gedrückt
   if (btn3Over) {
-    img=loadImage("800px-BRD.png");
+    hintergrundmenue=loadImage("800px-BRD.png");
     imageIsLoaded = true;
   } 
+  
+  //Kalibrieren-Button wird gedrückt
   if (btnKaliOver) {
-
-   if(!kali) {
-     calibrate();
-     btnKaliFalse=btnKaliTrue;
-     kali=!kali;
-   }
-   
-   else {
-     btnKaliFalse=loadImage("btnKaliFalse.png");
-     kali=false;
-   }
-
-   
+     if(!kali) {
+       calibrate();
+       btnKaliFalse=btnKaliTrue;
+       kali=!kali;
+       }
+     else {
+       btnKaliFalse=loadImage("btnKaliFalse.png");
+       kali=false;
+       }
   }
+  
+  //Ein-/Ausblenden-Button wird gedrückt
   if (btnEinblendenOver) {
     Ausblenden=!Ausblenden;
     if (Ausblenden) {
       btnEinblenden=loadImage("EinblendenBtn.png");
     } else btnEinblenden=loadImage("EinblendenBtn2.png");
   } 
-
+  
+  //Aufgabe Starten-Button wird gedrückt
   if (btnAufgabeStartOver) {
     AufgabeStarten=1;
   }
-    if (radiobtn1Over) {
+  
+  //Radiobutton 1 wird gedrückt
+  if (radiobtn1Over) {
     radiobtn1=true;
     radiobtn2=false;
     OscMessage myMessage = new OscMessage("/pocket");
-  myMessage.add(radiobtn1);
-  oscP5.send(myMessage, myRemoteLocation); 
+    myMessage.add(radiobtn1);
+    oscP5.send(myMessage, myRemoteLocation); 
   }
-     if (radiobtn2Over) {
+  
+  //Radiobutton 2 wird gedrückt
+  if (radiobtn2Over) {
     radiobtn2=true;
     radiobtn1=false;
     OscMessage myMessage = new OscMessage("/pocket");
-  myMessage.add(radiobtn1);
-  oscP5.send(myMessage, myRemoteLocation); 
+    myMessage.add(radiobtn1);
+    oscP5.send(myMessage, myRemoteLocation); 
   }
   
+  //Hauptmenü-Button wird gedrückt
   if(btnHauptmenueOver){
     imageIsLoaded=false;
-    img=loadImage("Hintergrund_menue.png");
+    hintergrundmenue=loadImage("Hintergrund_menue.png");
     walking=false;
     firstStart=true;
     Ausblenden=false;
-     btnKaliFalse=loadImage("btnKaliFalse.png");
-     kali=false;
+    btnKaliFalse=loadImage("btnKaliFalse.png");
+    kali=false;
   }
 
 
@@ -462,7 +444,7 @@ void update (int x, int y) {
     radiobtn2Over  = false;
   }
 }
-//Funktion zur Prüfung ob Zeiger auf Button war
+//Funktion zur Prüfung, ob Zeiger auf Button war
 boolean overBtn1(int x, int y, int width, int height) {
   if (mouseX >= x && mouseX <= x+width && 
     mouseY >= y && mouseY <= y+height) {
@@ -471,7 +453,7 @@ boolean overBtn1(int x, int y, int width, int height) {
     return false;
   }
 }
-// Sensordaten Anzeige 
+// Anzeige der Himmelsrichtungen
 void displayText() {
   /* textSize(40);
   fill(10);
@@ -488,25 +470,3 @@ void displayText() {
   text("Osten", displayWidth, displayHeight/2);
   textAlign(CENTER); */
 }
-
-void displayAufgabeText(){
- textSize(50);
- 
- //textAlign(RIGHT, BOTTOM);
-  textAlign(CENTER);
- text("Finde das Brandenburger Tor",bildAufgabeX , 890);
- fill(255);
- }
- /*
-void firstStart() {
-  if (firstStart) {
-    ersterTimer=millis()+3000;
-    while (millis()<ersterTimer) {
-      textSize(50);
-      text("Kalibriere asdasdasdadad", 1000, 500);
-      fill(255);
-    }
-    firstStart=false;
-  }
-}
-*/
